@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "290026814616",
+    "project_id": "glitchxapp00711",
+    "storage_bucket": "glitchxapp00711.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290026814616:android:35b453616056d9a81024ed",
+        "android_client_info": {
+          "package_name": "com.example.glitchxscndprjt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfuGnOYOC-rHK2xxwPiWWEcMhKyiMPQPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
