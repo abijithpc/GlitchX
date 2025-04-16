@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:glitchxscndprjt/features/Auth/Data/DataSource/firebase_auth_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/Auth/Domain/Repository/auth_repository.dart';
 import 'package:glitchxscndprjt/features/Auth/Data/Models/usermodels.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuthRemoteDataSource remoteDataSource;
@@ -27,10 +29,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    return await remoteDataSource.login(
-      email: email,
-      password: password,
-    );
+    return await remoteDataSource.login(email: email, password: password);
   }
 
   @override
@@ -46,5 +45,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<bool> isEmailVerified() async {
     return await remoteDataSource.isEmailVerified();
+  }
+
+  @override
+  Future<Usermodels> signInWithGoogle() async {
+    return await remoteDataSource.signInWithGoogle();
   }
 }

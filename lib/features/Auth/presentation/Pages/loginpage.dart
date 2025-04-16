@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_event.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_state.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/Widget/screenbackground.dart';
+import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
 import 'package:lottie/lottie.dart';
 
 class Loginpage extends StatefulWidget {
@@ -110,6 +110,7 @@ class _LoginpageState extends State<Loginpage> {
                       shadowColor: Colors.black45,
                       borderRadius: BorderRadius.circular(12),
                       child: TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
@@ -122,6 +123,12 @@ class _LoginpageState extends State<Loginpage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter Email";
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.03),
@@ -132,6 +139,7 @@ class _LoginpageState extends State<Loginpage> {
                       shadowColor: Colors.black45,
                       borderRadius: BorderRadius.circular(12),
                       child: TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
@@ -144,6 +152,12 @@ class _LoginpageState extends State<Loginpage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter password";
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.015),
@@ -151,7 +165,12 @@ class _LoginpageState extends State<Loginpage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            '/resetpassword',
+                          );
+                        },
                         child: Text(
                           "Forgot Password?",
                           style: TextStyle(
@@ -212,36 +231,24 @@ class _LoginpageState extends State<Loginpage> {
 
                     SizedBox(height: screenHeight * 0.04),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: screenWidth * 0.44,
-                          height: screenHeight * 0.06,
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: Image.asset(
-                              'Assets/Auth_Icon/icons8-google-48.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            label: Text('Google'),
+                    Center(
+                      child: SizedBox(
+                        width: screenWidth * 0.60,
+                        height: screenHeight * 0.06,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            context.read<AuthBloc>().add(
+                              GoogleSignInRequested(),
+                            );
+                          },
+                          icon: Image.asset(
+                            'Assets/Auth_Icon/icons8-google-48.png',
+                            width: 24,
+                            height: 24,
                           ),
+                          label: Text('Sign In with Google'),
                         ),
-                        SizedBox(
-                          width: screenWidth * 0.44,
-                          height: screenHeight * 0.06,
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: Image.asset(
-                              'Assets/Auth_Icon/icons8-facebook-48.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            label: Text('Facebook'),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
 
                     SizedBox(height: screenHeight * 0.04),
@@ -258,7 +265,10 @@ class _LoginpageState extends State<Loginpage> {
                           onPressed: () {
                             Navigator.pushNamed(context, '/signup');
                           },
-                          child: Text("Sign Up"),
+                          child: Text(
+                            "Sign Up",
+                            style: TextStyle(color: Colors.greenAccent),
+                          ),
                         ),
                       ],
                     ),

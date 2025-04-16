@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:glitchxscndprjt/features/Auth/Domain/Repository/auth_repository.dart';
 import 'package:glitchxscndprjt/features/Auth/Domain/UseCase/emailverification_usecase.dart';
+import 'package:glitchxscndprjt/features/Auth/Domain/UseCase/google_signin_usecase.dart';
 import 'package:glitchxscndprjt/features/Auth/Domain/UseCase/login_usecase.dart';
 import 'package:glitchxscndprjt/features/Auth/Domain/UseCase/resetpassword_usecase.dart';
 import 'package:glitchxscndprjt/features/Auth/Domain/UseCase/signup_usecase.dart';
@@ -13,12 +15,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUsecase loginUsecase;
   final EmailverificationUsecase emailVerificationUsecase;
   final ResetpasswordUsecase resetPasswordUsecase;
+  final AuthRepository authRepository;
+  final SignInWithGoogleUseCase signInWithGoogleUseCase;
 
   AuthBloc({
     required this.signupUsecase,
     required this.loginUsecase,
     required this.emailVerificationUsecase,
     required this.resetPasswordUsecase,
+    required this.authRepository,
+    required this.signInWithGoogleUseCase,
   }) : super(AuthIntial()) {
     // SignUp Event
     on<SignUpEvent>((event, emit) async {
@@ -102,6 +108,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       } catch (e) {
         emit(AuthError(e.toString()));
+      }
+    });
+
+    on<GoogleSignInRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final googleusermodel = await authRepository.signInWithGoogle();
+        final firebaseUser = FirebaseAuth.instance.currentUser;
+
+        if (firebaseUser == null) {
+          emit(AuthError("Google Sign In Failed"));
+          return;
+        }
+
+        emit(LoginSuccess(googleusermodel));
+      } catch (e) {
+        emit(AuthError("Google Sing-In Failed: ${e.toString()}"));
       }
     });
   }

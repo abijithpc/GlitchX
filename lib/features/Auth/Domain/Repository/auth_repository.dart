@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:glitchxscndprjt/features/Auth/Data/Models/usermodels.dart';
 
 abstract class AuthRepository {
@@ -15,4 +16,7 @@ abstract class AuthRepository {
   Future<void> resetPassword(String email);
 
   Future<bool> isEmailVerified();
+
+  Future<Usermodels> signInWithGoogle();
+
 }

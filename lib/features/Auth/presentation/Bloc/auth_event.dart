@@ -29,5 +29,8 @@ class ResetPasswordEvent extends AuthEvent {
   ResetPasswordEvent(this.email);
 }
 
-class CheckEmailVerificationEvent extends AuthEvent {
-}
+class CheckEmailVerificationEvent extends AuthEvent {}
+
+class SignOutEvent extends AuthEvent {}
+
+class GoogleSignInRequested extends AuthEvent {}

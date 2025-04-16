@@ -22,6 +22,10 @@ class LoginSuccess extends AuthState {
   LoginSuccess(this.user);
 }
 
+class SignOutSuccess extends AuthState {
+  List<Object> get props => [];
+}
+
 class ResetPasswordEmailSent extends AuthState {}
 
 class SendEmailVerificationStatus extends AuthState {
@@ -41,3 +45,5 @@ class AuthEmailVerifiedState extends AuthState {
 
   AuthEmailVerifiedState({this.message = "Email has been verified"});
 }
+
+class AuthSuccess extends AuthState {}

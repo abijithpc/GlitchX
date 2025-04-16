@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:glitchxscndprjt/features/Auth/Data/Models/usermodels.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthRemoteDataSource {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   FirebaseAuthRemoteDataSource({
     required FirebaseAuth auth,
@@ -67,4 +70,47 @@ class FirebaseAuthRemoteDataSource {
       await user.sendEmailVerification();
     }
   }
+
+  @override
+  Future<Usermodels> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) {
+      throw Exception('Google Sign-In aborted');
+    }
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final userCredential = await FirebaseAuth.instance.signInWithCredential(
+      credential,
+    );
+    final user = userCredential.user;
+
+    if (user == null)
+      throw Exception('Firebase user is null after Google Sign-In');
+
+    final userDoc = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid);
+
+    // Create user in Firestore if not existing
+    final docSnapshot = await userDoc.get();
+    if (!docSnapshot.exists) {
+      final newUser = Usermodels(
+        id: user.uid,
+        email: user.email ?? '',
+        username: user.displayName ?? 'No Name',
+        mobileNumber: '',
+      );
+      await userDoc.set(newUser.toJson());
+      return newUser;
+    } else {
+      return Usermodels.fromJson(docSnapshot.data()!);
+    }
+  }
 }
+ 
