@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
 
 class LoginSplashBtn extends StatelessWidget {
   const LoginSplashBtn({super.key, required this.screenWidth});

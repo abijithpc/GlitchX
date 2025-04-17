@@ -9,6 +9,7 @@ import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart'
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/signuppage.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/edit_profile.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_detailspage.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_page.dart';
 import 'package:glitchxscndprjt/features/Splash/Presentation/splashscreen1.dart';
 import 'package:glitchxscndprjt/features/Splash/Presentation/splashscreen2.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
                 '/profilePage': (_) => ProfilePage(),
                 '/resetpassword': (_) => ResetPassword(),
                 '/editprofile': (_) => EditProfilePage(),
+                '/profiledetails': (_) => ProfileDetailspage(),
               },
             ),
       ),

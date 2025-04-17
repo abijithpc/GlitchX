@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:glitchxscndprjt/features/Auth/Data/DataSource/firebase_auth_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/Auth/Domain/Repository/auth_repository.dart';
 import 'package:glitchxscndprjt/features/Auth/Data/Models/usermodels.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuthRemoteDataSource remoteDataSource;

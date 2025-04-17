@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
-import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/presentation/widget/editprofileform.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
-import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_event.dart';
-import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_state.dart';
+
+import '../../Data/Models/user_model.dart';
+import '../Bloc/profilebloc.dart';
+import '../Bloc/profile_event.dart';
+import '../Bloc/profile_state.dart';
+import '../../../Auth/presentation/widget/screenbackground.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -17,9 +19,10 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _usernameController;
-  late TextEditingController _emailController;
-  late TextEditingController _mobileController;
+  late final TextEditingController _usernameController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _mobileController;
+
   File? _imageFile;
   String? _networkImageUrl;
 
@@ -30,6 +33,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _usernameController = TextEditingController();
     _emailController = TextEditingController();
     _mobileController = TextEditingController();
+    
   }
 
   Future<void> _pickImage() async {
@@ -41,10 +45,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  void _submit(ProfileLoaded state) {
+    if (_formKey.currentState!.validate()) {
+      final updatedUser = UserModel(
+        id: state.user.id,
+        username: _usernameController.text.trim(),
+        email: _emailController.text.trim(),
+        mobile: _mobileController.text.trim(),
+      );
+      context.read<ProfileBloc>().add(SubmitProfileUpdateEvent(updatedUser));
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    final screen = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Edit Profile")),
@@ -67,130 +83,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
           }
 
           return ScreenBackGround(
+            screenHeight: screen.height,
+            screenWidth: screen.width,
             widget: Padding(
               padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: [
-                    Center(
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 60,
-                            backgroundImage:
-                                _imageFile != null
-                                    ? FileImage(_imageFile!)
-                                    : (_networkImageUrl != null &&
-                                        _networkImageUrl!.isNotEmpty)
-                                    ? NetworkImage(_networkImageUrl!)
-                                        as ImageProvider
-                                    : const AssetImage(
-                                      'Assets/Auth_Icon/icon-5359554_1280.png',
-                                    ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 4,
-                            child: GestureDetector(
-                              onTap: _pickImage,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.shade200,
-                                child: const Icon(Icons.edit, size: 18),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    _buildTextField(
-                      controller: _usernameController,
-                      label: "Username",
-                      icon: Icons.person,
-                      validator:
-                          (val) => val!.isEmpty ? "Enter a username" : null,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextField(
-                      controller: _emailController,
-                      label: "Email",
-                      icon: Icons.email,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextField(
-                      controller: _mobileController,
-                      label: "Mobile Number",
-                      icon: Icons.phone,
-                      keyboardType: TextInputType.phone,
-                      validator:
-                          (val) =>
-                              val!.isEmpty ? "Enter a mobile number" : null,
-                    ),
-                    const SizedBox(height: 30),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.save),
-                      label: const Text("Save Changes"),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        textStyle: const TextStyle(fontSize: 16),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          final updatedUser = UserModel(
-                            id: (state as ProfileLoaded).user.id,
-                            username: _usernameController.text.trim(),
-                            email: _emailController.text.trim(),
-                            mobile: _mobileController.text.trim(),
-                          );
-
-                          context.read<ProfileBloc>().add(
-                            SubmitProfileUpdateEvent(updatedUser),
-                          );
-                          // final messenger = ScaffoldMessenger.of(context);
-                          // messenger.clearSnackBars(); // 👈 This is important
-                          // messenger.showSnackBar(
-                          //   SnackBar(
-                          //     content: Text("Profile updated successfully!"),
-                          //   ),
-                          // );
-
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    ),
-                  ],
-                ),
+              child: EditProfileForm(
+                formKey: _formKey,
+                usernameController: _usernameController,
+                emailController: _emailController,
+                mobileController: _mobileController,
+                imageFile: _imageFile,
+                networkImageUrl: _networkImageUrl,
+                state: state,
+                onPickImage: _pickImage,
+                onSubmit: () {
+                  if (state is ProfileLoaded) _submit(state);
+                },
               ),
             ),
-            screenHeight: screenHeight,
-            screenWidth: screenWidth,
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    bool readOnly = false,
-    TextInputType keyboardType = TextInputType.text,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      readOnly: readOnly,
-      keyboardType: keyboardType,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        filled: true,
-        fillColor: Colors.grey.shade100,
       ),
     );
   }

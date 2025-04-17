@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/verify_emailpage.dart';
 
 class SignupHelpers {
-
   static Widget buildLoginRedirect(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -13,7 +13,11 @@ class SignupHelpers {
           style: TextStyle(color: Colors.white),
         ),
         TextButton(
-          onPressed: () => Navigator.pushNamed(context, '/login'),
+          onPressed:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Loginpage()),
+              ),
           child: const Text(
             'Login',
             style: TextStyle(color: Colors.greenAccent),

@@ -1,13 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:glitchxscndprjt/features/Auth/Data/Models/usermodels.dart';
-import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthRemoteDataSource {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  // final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   FirebaseAuthRemoteDataSource({
     required FirebaseAuth auth,
@@ -71,7 +70,6 @@ class FirebaseAuthRemoteDataSource {
     }
   }
 
-  @override
   Future<Usermodels> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     if (googleUser == null) {

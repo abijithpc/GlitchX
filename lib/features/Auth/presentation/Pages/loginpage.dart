@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_event.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_state.dart';
+import 'package:glitchxscndprjt/features/Auth/presentation/Pages/reset_password.dart';
+import 'package:glitchxscndprjt/features/Auth/presentation/Pages/signuppage.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
 import 'package:lottie/lottie.dart';
 
@@ -166,9 +168,11 @@ class _LoginpageState extends State<Loginpage> {
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacementNamed(
+                          Navigator.pushReplacement(
                             context,
-                            '/resetpassword',
+                            MaterialPageRoute(
+                              builder: (context) => ResetPassword(),
+                            ),
                           );
                         },
                         child: Text(
@@ -263,7 +267,12 @@ class _LoginpageState extends State<Loginpage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/signup');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Signuppage(),
+                              ),
+                            );
                           },
                           child: Text(
                             "Sign Up",
