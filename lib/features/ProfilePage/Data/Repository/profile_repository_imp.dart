@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:latlong2/latlong.dart' as latLng;
 import 'package:glitchxscndprjt/features/ProfilePage/Data/DataSource/profile_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/Repository/profile_auth_repository.dart';
@@ -16,4 +18,15 @@ class ProfileAuthRepositoryImp implements ProfileAuthRepository {
   Future<void> updateUserProfile(UserModel user) {
     return remoteDatasource.updateUserProfile(user);
   }
+
+  @override
+  Future<String?> uploadProfileImage(File imageFile) =>
+      remoteDatasource.uploadImage(imageFile);
+
+  // Future<void> updateUserLocation(
+  //   latLng.LatLng location,
+  //   String address,
+  // ) async {
+  //   return await remoteDatasource.updateUserLocation(location, address);
+  // }
 }

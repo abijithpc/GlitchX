@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/presentation/widget/location_selection_page.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../Bloc/profile_state.dart';
 
 class EditProfileForm extends StatelessWidget {
@@ -7,6 +9,7 @@ class EditProfileForm extends StatelessWidget {
   final TextEditingController usernameController;
   final TextEditingController emailController;
   final TextEditingController mobileController;
+  final TextEditingController locationController;
   final File? imageFile;
   final String? networkImageUrl;
   final ProfileState state;
@@ -24,13 +27,19 @@ class EditProfileForm extends StatelessWidget {
     required this.state,
     required this.onPickImage,
     required this.onSubmit,
+    required this.locationController,
   });
+
+  void onSelectLocation(String location) {
+    locationController.text = location;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
       child: ListView(
+        padding: const EdgeInsets.all(20.0),
         children: [
           _buildProfilePicture(),
           const SizedBox(height: 30),
@@ -38,8 +47,7 @@ class EditProfileForm extends StatelessWidget {
             controller: usernameController,
             label: "Username",
             icon: Icons.person,
-            validator: (val) =>
-                val!.isEmpty ? "Enter a username" : null,
+            validator: (val) => val!.isEmpty ? "Enter a username" : null,
           ),
           const SizedBox(height: 16),
           _buildTextField(
@@ -54,9 +62,10 @@ class EditProfileForm extends StatelessWidget {
             label: "Mobile Number",
             icon: Icons.phone,
             keyboardType: TextInputType.phone,
-            validator: (val) =>
-                val!.isEmpty ? "Enter a mobile number" : null,
+            validator: (val) => val!.isEmpty ? "Enter a mobile number" : null,
           ),
+          const SizedBox(height: 16),
+          _buildLocationField(context),
           const SizedBox(height: 30),
           _buildSaveButton(),
         ],
@@ -66,27 +75,38 @@ class EditProfileForm extends StatelessWidget {
 
   Widget _buildProfilePicture() {
     final hasImage = imageFile != null;
-    final hasNetworkImage = networkImageUrl != null && networkImageUrl!.isNotEmpty;
+    final hasNetworkImage =
+        networkImageUrl != null && networkImageUrl!.isNotEmpty;
 
     return Center(
       child: Stack(
         children: [
-          CircleAvatar(
-            radius: 60,
-            backgroundImage: hasImage
-                ? FileImage(imageFile!)
-                : hasNetworkImage
-                    ? NetworkImage(networkImageUrl!)
-                    : const AssetImage('Assets/Auth_Icon/icon-5359554_1280.png') as ImageProvider,
+          ClipOval(
+            child: Container(
+              color: Colors.blueGrey.shade50, // Light background for fallback
+              child: CircleAvatar(
+                radius: 70,
+                backgroundImage:
+                    hasImage
+                        ? FileImage(imageFile!)
+                        : hasNetworkImage
+                        ? NetworkImage(networkImageUrl!)
+                        : const AssetImage(
+                              'Assets/Auth_Icon/icon-5359554_1280.png',
+                            )
+                            as ImageProvider,
+              ),
+            ),
           ),
           Positioned(
             bottom: 0,
-            right: 4,
+            right: 0,
             child: GestureDetector(
               onTap: onPickImage,
               child: CircleAvatar(
-                backgroundColor: Colors.grey.shade200,
-                child: const Icon(Icons.edit, size: 18),
+                radius: 20,
+                backgroundColor: Colors.blueAccent.shade100,
+                child: const Icon(Icons.edit, size: 18, color: Colors.white),
               ),
             ),
           ),
@@ -108,14 +128,29 @@ class EditProfileForm extends StatelessWidget {
       readOnly: readOnly,
       keyboardType: keyboardType,
       validator: validator,
+      style: const TextStyle(fontSize: 18, color: Colors.black),
       decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 16,
+        ), // More padding for the text
         labelText: label,
-        prefixIcon: Icon(icon),
+        labelStyle: TextStyle(color: Colors.blueAccent.shade700),
+        prefixIcon: Icon(icon, color: Colors.blueAccent.shade700),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(30), // More rounded edges
+          borderSide: BorderSide(color: Colors.blueAccent.shade700, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30), // Rounded border on focus
+          borderSide: BorderSide(color: Colors.blueAccent.shade700, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: Colors.blueAccent.shade700, width: 1),
         ),
         filled: true,
-        fillColor: Colors.grey.shade100,
+        fillColor: Colors.blueGrey.shade50,
       ),
     );
   }
@@ -126,9 +161,55 @@ class EditProfileForm extends StatelessWidget {
       label: const Text("Save Changes"),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 14),
-        textStyle: const TextStyle(fontSize: 16),
+        backgroundColor: Colors.blueAccent.shade700, // Gradient color
+        foregroundColor: Colors.white,
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: onSubmit,
+    );
+  }
+
+  Widget _buildLocationField(BuildContext context) {
+    return TextFormField(
+      controller: locationController,
+      readOnly: true,
+      style: const TextStyle(fontSize: 18, color: Colors.black),
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 16,
+        ),
+        labelText: 'Location',
+        labelStyle: TextStyle(color: Colors.blueAccent.shade700),
+        prefixIcon: Icon(Icons.location_on, color: Colors.blueAccent.shade700),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: Colors.blueAccent.shade700, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: Colors.blueAccent.shade700, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: Colors.blueAccent.shade700, width: 1),
+        ),
+        filled: true,
+        fillColor: Colors.blueGrey.shade50,
+      ),
+      onTap: () async {
+        String? selected = await Navigator.push<String>(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LocationSelectionPage(),
+          ),
+        ).then((address) {
+          if (address != null) {
+            onSelectLocation(address);
+          }
+        });
+      },
     );
   }
 }

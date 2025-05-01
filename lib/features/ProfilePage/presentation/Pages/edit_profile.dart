@@ -22,6 +22,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late final TextEditingController _usernameController;
   late final TextEditingController _emailController;
   late final TextEditingController _mobileController;
+  late final TextEditingController _locationController;
 
   File? _imageFile;
   String? _networkImageUrl;
@@ -33,7 +34,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _usernameController = TextEditingController();
     _emailController = TextEditingController();
     _mobileController = TextEditingController();
-    
+    _locationController = TextEditingController();
   }
 
   Future<void> _pickImage() async {
@@ -52,8 +53,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
         username: _usernameController.text.trim(),
         email: _emailController.text.trim(),
         mobile: _mobileController.text.trim(),
+        profilePictureUrl: state.user.profilePictureUrl,
+        location: _locationController.text.trim(),
       );
-      context.read<ProfileBloc>().add(SubmitProfileUpdateEvent(updatedUser));
+      context.read<ProfileBloc>().add(
+        SubmitProfileUpdateEvent(updatedUser, imageFile: _imageFile),
+      );
       Navigator.of(context).pop();
     }
   }
@@ -94,6 +99,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 mobileController: _mobileController,
                 imageFile: _imageFile,
                 networkImageUrl: _networkImageUrl,
+                locationController: _locationController,
                 state: state,
                 onPickImage: _pickImage,
                 onSubmit: () {

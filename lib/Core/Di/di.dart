@@ -16,10 +16,17 @@ import 'package:glitchxscndprjt/features/Auth/Domain/UseCase/emailverification_u
 
 // Presentation Layer - Bloc
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_bloc.dart';
+import 'package:glitchxscndprjt/features/HomePage/Data/DataSource/user_category_remotedatasource.dart';
+import 'package:glitchxscndprjt/features/HomePage/Data/Repository/user_category_repositoryimpl.dart';
+import 'package:glitchxscndprjt/features/HomePage/Domain/Repository/user_categoryrepository.dart';
+import 'package:glitchxscndprjt/features/HomePage/Domain/UseCase/getusercategories_usecase.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/DataSource/profile_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Repository/profile_repository_imp.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/Repository/profile_auth_repository.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/getprofile_usecase.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/update_location_usecase.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/updateprofileimage_usecase.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/updateuserprofileusecase.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,11 +39,17 @@ Future<void> init() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
 
+
   // 🌐 Data Source
   sl.registerLazySingleton<FirebaseAuthRemoteDataSource>(
     () => FirebaseAuthRemoteDataSource(auth: sl(), firestore: sl()),
   );
   sl.registerLazySingleton(() => ProfileRemoteDatasource(sl(), sl()));
+
+  sl.registerLazySingleton<UserCategoryRemotedatasource>(
+    () => UserCategoryRemotedatasource(FirebaseFirestore.instance),
+  );
+
 
   // 📦 Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -45,6 +58,10 @@ Future<void> init() async {
   sl.registerLazySingleton<ProfileAuthRepository>(
     () => ProfileAuthRepositoryImp(sl()),
   );
+  sl.registerLazySingleton<UserCategoryrepository>(
+    () => UserCategoryRepositoryimpl(sl()),
+  );
+
 
   // ✅ UseCases
   sl.registerLazySingleton(() => SignupUsecase(sl()));
@@ -54,6 +71,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetprofileUsecase(sl()));
   sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => Updateuserprofileusecase(sl()));
+  sl.registerLazySingleton(() => UpdateprofileimageUsecase(sl()));
+  // sl.registerLazySingleton(() => UpdateLocationUsecase(sl()));
+  sl.registerLazySingleton(() => GetusercategoriesUsecase(sl()));
+
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -68,6 +89,12 @@ Future<void> init() async {
   );
 
   sl.registerFactory(
-    () => ProfileBloc(getprofileUsecase: sl(), updateuserProfileUsecase: sl()),
+    () => ProfileBloc(
+      getprofileUsecase: sl(),
+      updateuserProfileUsecase: sl(),
+      updateprofileimageUsecase: sl(),
+      // updateLocationUsecase: sl(),
+    ),
   );
+  sl.registerFactory(() => UserCategoryBloc(sl()));
 }

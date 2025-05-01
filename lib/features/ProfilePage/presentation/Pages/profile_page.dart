@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
@@ -44,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
         },
         builder: (context, state) {
           if (state is ProfileLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CupertinoActivityIndicator());
           } else if (state is ProfileLoaded) {
             return ScreenBackGround(
               screenHeight: MediaQuery.of(context).size.height,
@@ -61,7 +62,29 @@ class _ProfilePageState extends State<ProfilePage> {
                       ProfileTile(
                         icon: Icons.logout,
                         title: "Sign Out",
-                        onTap: _signOut,
+                        onTap: () {
+                          showCupertinoDialog(
+                            context: context,
+                            builder:
+                                (context) => CupertinoAlertDialog(
+                                  title: Text("Sign Out"),
+                                  content: Text(
+                                    "Are you sure you want to sign out? ",
+                                  ),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      onPressed: () => _signOut(),
+                                      textStyle: TextStyle(color: Colors.red),
+                                      child: Text("Sign Out"),
+                                    ),
+                                    CupertinoDialogAction(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("Cancel"),
+                                    ),
+                                  ],
+                                ),
+                          );
+                        },
                       ),
                     ],
                   ),

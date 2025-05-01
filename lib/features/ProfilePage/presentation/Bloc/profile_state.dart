@@ -28,3 +28,9 @@ class EditProfileFailure extends ProfileState {
   final String message;
   EditProfileFailure(this.message);
 }
+
+class ProfileLocationUpdated extends ProfileState {
+  final String message;
+
+  ProfileLocationUpdated({this.message = "Location updated successfully"});
+}

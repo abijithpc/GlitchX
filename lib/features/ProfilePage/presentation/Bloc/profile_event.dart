@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:latlong2/latlong.dart' as latLng;
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 
 abstract class ProfileEvent {}
@@ -5,6 +7,13 @@ abstract class ProfileEvent {}
 class LoadUserProfile extends ProfileEvent {}
 
 class SubmitProfileUpdateEvent extends ProfileEvent {
+  final File? imageFile;
   final UserModel user;
-  SubmitProfileUpdateEvent(this.user);
+  SubmitProfileUpdateEvent(this.user, {this.imageFile});
+}
+
+class UpdateLocationEvent extends ProfileEvent {
+  final String address;
+
+  UpdateLocationEvent(this.address);
 }

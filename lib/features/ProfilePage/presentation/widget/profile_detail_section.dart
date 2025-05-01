@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/edit_profile.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_detailspage.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/presentation/widget/profile_avatar.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/widget/profile_tile.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
@@ -14,7 +15,7 @@ class ProfileDetailsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildProfileAvatar(user),
+        ProfileAvatar(user: user),
         const SizedBox(height: 16),
         Text(
           user.username ?? "No Name",
@@ -33,6 +34,36 @@ class ProfileDetailsSection extends StatelessWidget {
           user.mobile ?? "No Mobile Number",
           style: const TextStyle(fontSize: 14, color: Colors.white70),
         ),
+        if (user.isGoogleUser == true)
+          Container(
+            margin: const EdgeInsets.only(top: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white30),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.network(
+                  'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+                  height: 18,
+                  width: 18,
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  "Signed in with Google",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white70,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
         const SizedBox(height: 20),
         const Divider(thickness: 2, color: Colors.white30),
         const SizedBox(height: 10),
@@ -78,34 +109,6 @@ class ProfileDetailsSection extends StatelessWidget {
         ),
         SizedBox(height: 10),
       ],
-    );
-  }
-
-  Widget _buildProfileAvatar(UserModel user) {
-    final hasImage =
-        user.profilePictureUrl != null && user.profilePictureUrl!.isNotEmpty;
-    return ClipOval(
-      child: Container(
-        width: 110,
-        height: 110,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white30, width: 2),
-        ),
-        child:
-            hasImage
-                ? Image.network(
-                  user.profilePictureUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder:
-                      (_, __, ___) => const Icon(
-                        Icons.person,
-                        size: 60,
-                        color: Colors.white,
-                      ),
-                )
-                : const Icon(Icons.person, size: 60, color: Colors.white),
-      ),
     );
   }
 }

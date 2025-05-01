@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/reset_password.dart';
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
 import 'package:glitchxscndprjt/features/HomePage/Widget/bottomnavigation_bar.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Pages/homepage.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/signuppage.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<AuthBloc>()),
         BlocProvider(create: (context) => BottomNavigationCubit()),
         BlocProvider(create: (context) => di.sl<ProfileBloc>()),
+        BlocProvider(create: (context) => di.sl<UserCategoryBloc>()),
       ],
       child: Builder(
         builder:
