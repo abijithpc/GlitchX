@@ -84,9 +84,10 @@ class _ProfilePageState extends State<ProfilePage> {
   void _signOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Loginpage()),
+
+    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const Loginpage()),
+      (route) => false,
     );
   }
 }

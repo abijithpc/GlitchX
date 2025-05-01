@@ -6,6 +6,7 @@ import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_state.dart'
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/reset_password.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/signuppage.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/features/HomePage/Widget/bottomnavigation_bar.dart';
 import 'package:lottie/lottie.dart';
 
 class Loginpage extends StatefulWidget {
@@ -76,7 +77,12 @@ class _LoginpageState extends State<Loginpage> {
             );
           } else if (state is LoginSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
-            Navigator.pushReplacementNamed(context, '/bottomNav');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PersistentBottomNavigationBar(),
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -257,7 +263,6 @@ class _LoginpageState extends State<Loginpage> {
 
                     SizedBox(height: screenHeight * 0.04),
 
-                    // Optional Signup Prompt
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
