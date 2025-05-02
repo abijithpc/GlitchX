@@ -1,0 +1,12 @@
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/Repository/product_repository.dart';
+
+class GetproductUsecase {
+  final ProductRepository repository;
+
+  GetproductUsecase(this.repository);
+
+  Future<List<ProductModel>> call(String category) {
+    return repository.getProductsByCategory(category);
+  }
+}

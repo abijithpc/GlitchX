@@ -55,5 +55,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     //     emit(ProfileError("Failed to update location"));
     //   }
     // });
+    
   }
 }

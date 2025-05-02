@@ -16,6 +16,12 @@ import 'package:glitchxscndprjt/features/Auth/Domain/UseCase/emailverification_u
 
 // Presentation Layer - Bloc
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_bloc.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Data/DataSource/product_remote_datasource.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Data/Repository/product_repo_impl.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/Repository/product_repository.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproduct_usecase.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproductid_usecase.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/DataSource/user_category_remotedatasource.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/Repository/user_category_repositoryimpl.dart';
 import 'package:glitchxscndprjt/features/HomePage/Domain/Repository/user_categoryrepository.dart';
@@ -39,7 +45,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
 
-
   // 🌐 Data Source
   sl.registerLazySingleton<FirebaseAuthRemoteDataSource>(
     () => FirebaseAuthRemoteDataSource(auth: sl(), firestore: sl()),
@@ -49,7 +54,9 @@ Future<void> init() async {
   sl.registerLazySingleton<UserCategoryRemotedatasource>(
     () => UserCategoryRemotedatasource(FirebaseFirestore.instance),
   );
-
+  sl.registerLazySingleton<ProductRemoteDatasource>(
+    () => ProductRemoteDatasource(sl()),
+  );
 
   // 📦 Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -61,7 +68,9 @@ Future<void> init() async {
   sl.registerLazySingleton<UserCategoryrepository>(
     () => UserCategoryRepositoryimpl(sl()),
   );
-
+  sl.registerLazySingleton<ProductRepository>(
+    () => ProductRepositoryImpl(sl()),
+  );
 
   // ✅ UseCases
   sl.registerLazySingleton(() => SignupUsecase(sl()));
@@ -74,7 +83,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateprofileimageUsecase(sl()));
   // sl.registerLazySingleton(() => UpdateLocationUsecase(sl()));
   sl.registerLazySingleton(() => GetusercategoriesUsecase(sl()));
-
+  sl.registerLazySingleton(() => GetproductUsecase(sl()));
+  sl.registerLazySingleton(() => GetproductidUsecase(sl()));
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -97,4 +107,5 @@ Future<void> init() async {
     ),
   );
   sl.registerFactory(() => UserCategoryBloc(sl()));
+  sl.registerFactory(() => ProductBloc(sl(), sl()));
 }

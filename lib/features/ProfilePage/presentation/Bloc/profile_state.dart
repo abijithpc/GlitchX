@@ -1,3 +1,4 @@
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 
 abstract class ProfileState {}
@@ -33,4 +34,22 @@ class ProfileLocationUpdated extends ProfileState {
   final String message;
 
   ProfileLocationUpdated({this.message = "Location updated successfully"});
+}
+
+abstract class ProductDetailsState {}
+
+class ProductDetailsInitial extends ProductDetailsState {}
+
+class ProductDetailsLoading extends ProductDetailsState {}
+
+class ProductDetailsLoaded extends ProductDetailsState {
+  final ProductModel product;
+
+  ProductDetailsLoaded(this.product);
+}
+
+class ProductDetailsError extends ProductDetailsState {
+  final String message;
+
+  ProductDetailsError(this.message);
 }

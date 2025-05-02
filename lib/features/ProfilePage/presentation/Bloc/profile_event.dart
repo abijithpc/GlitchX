@@ -17,3 +17,11 @@ class UpdateLocationEvent extends ProfileEvent {
 
   UpdateLocationEvent(this.address);
 }
+
+abstract class ProductDetailsEvent {}
+
+class LoadProductDetails extends ProductDetailsEvent {
+  final String productId;
+
+  LoadProductDetails(this.productId);
+}

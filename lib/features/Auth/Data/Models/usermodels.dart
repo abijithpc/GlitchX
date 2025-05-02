@@ -1,4 +1,3 @@
-import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 
 class Usermodels {
   final String id;

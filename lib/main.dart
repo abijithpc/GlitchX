@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/reset_password.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
 import 'package:glitchxscndprjt/features/HomePage/Widget/bottomnavigation_bar.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => BottomNavigationCubit()),
         BlocProvider(create: (context) => di.sl<ProfileBloc>()),
         BlocProvider(create: (context) => di.sl<UserCategoryBloc>()),
+        BlocProvider(create: (context) => di.sl<ProductBloc>()),
       ],
       child: Builder(
         builder:
