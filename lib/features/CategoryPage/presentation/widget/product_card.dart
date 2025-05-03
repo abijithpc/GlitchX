@@ -22,7 +22,9 @@ class ProductCard extends StatelessWidget {
       ),
       itemCount: products.length,
       itemBuilder: (_, index) {
+        print('Loaded ${products.length} products');
         final product = products[index];
+        print('Image URL: ${product.imageUrls}');
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -53,12 +55,45 @@ class ProductCard extends StatelessWidget {
                         top: Radius.circular(12),
                       ),
                       child: Image.network(
-                        product.imageUrl,
+                        // Check if product.imageUrl is a list or single URL
+                        product.imageUrls.isNotEmpty
+                            ? product.imageUrls[0] // For a list of URLs
+                            : 'https://via.placeholder.com/150', // Fallback URL if no image URL is provided
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        errorBuilder:
-                            (_, __, ___) =>
-                                const Center(child: Icon(Icons.broken_image)),
+                        errorBuilder: (context, error, stackTrace) {
+                          // Log the error for debugging
+                          print('Error loading image: $error');
+                          return const Center(
+                            child: Icon(Icons.broken_image),
+                          ); // Show a broken image icon
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            // Image has finished loading
+                            print(
+                              'Image loaded successfully: ${product.imageUrls.isNotEmpty ? product.imageUrls[0] : 'No Image'}',
+                            );
+                            return child;
+                          } else {
+                            // Image is still loading
+                            print(
+                              'Loading image: ${product.imageUrls.isNotEmpty ? product.imageUrls[0] : 'No Image'}',
+                            );
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            (loadingProgress
+                                                    .expectedTotalBytes ??
+                                                1)
+                                        : null,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),

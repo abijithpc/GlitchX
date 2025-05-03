@@ -68,7 +68,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final screen = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Profile")),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "Edit Profile",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.black,
+      ),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state is ProfileError) {

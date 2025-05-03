@@ -22,7 +22,7 @@ class ScreenBackGround extends StatelessWidget {
           stops: [0.1, 0.9],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [const Color.fromARGB(255, 102, 102, 102), Colors.black],
+          colors: [const Color.fromARGB(255, 122, 0, 0), Colors.black],
         ),
       ),
       child: Center(

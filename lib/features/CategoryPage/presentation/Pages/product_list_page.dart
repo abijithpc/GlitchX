@@ -28,11 +28,14 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(title: Text('Products - ${widget.category}')),
+      appBar: AppBar(
+        title: Text(widget.category, style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+      ),
       body: ScreenBackGround(
         widget: BlocBuilder<ProductBloc, ProductState>(
           builder: (context, state) {
-            print("Current ProductBloc state: $state");
             if (state is ProductLoading) {
               return Center(child: CupertinoActivityIndicator(radius: 20));
             } else if (state is ProductLoaded) {

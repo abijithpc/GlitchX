@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text("My Account", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.black87,
+        backgroundColor: Colors.black,
       ),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {

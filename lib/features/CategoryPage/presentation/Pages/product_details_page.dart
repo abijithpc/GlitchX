@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_event.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_state.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/product_details_card.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final String productId;
@@ -24,40 +27,45 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screen = MediaQuery.of(context).size;
     return Scaffold(
-      body: BlocBuilder<ProductBloc, ProductState>(
-        builder: (context, state) {
-          if (state is ProductLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is ProductDetailsLoaded) {
-            final product = state.product;
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView(
-                children: [
-                  Image.network(product.imageUrl),
-                  SizedBox(height: 12),
-                  Text(
-                    product.name,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Text(product.description),
-                  Text("Category: ${product.category}"),
-                  Text("Disk Count: ${product.diskCount}"),
-                  Text("Price: ₹${product.price}"),
-                  Text("Stock: ${product.stock}"),
-                  Text("Release Date: ${product.releaseDate.toLocal()}"),
-                  Text("Min Specs: ${product.minSpecs}"),
-                  Text("Rec Specs: ${product.recSpecs}"),
-                ],
-              ),
-            );
-          } else if (state is ProductError) {
-            return Center(child: Text(state.message));
-          }
-          return SizedBox.shrink();
-        },
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        title: BlocBuilder<ProductBloc, ProductState>(
+          builder: (context, state) {
+            if (state is ProductDetailsLoaded) {
+              return Text(
+                state.product.name,
+                style: TextStyle(color: Colors.white),
+              );
+            } else if (state is ProductError) {
+              return Text("Error");
+            } else {
+              return Text("Loading...");
+            }
+          },
+        ),
+      ),
+      body: ScreenBackGround(
+        widget: BlocBuilder<ProductBloc, ProductState>(
+          builder: (context, state) {
+            if (state is ProductLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is ProductDetailsLoaded) {
+              final product = state.product;
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ProductDetailsPageCard(product: product),
+              );
+            } else if (state is ProductError) {
+              return Center(child: Text(state.message));
+            }
+            return SizedBox.shrink();
+          },
+        ),
+        screenHeight: screen.height,
+        screenWidth: screen.width,
       ),
     );
   }

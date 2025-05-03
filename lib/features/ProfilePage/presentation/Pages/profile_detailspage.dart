@@ -43,8 +43,12 @@ class _ProfileDetailspageState extends State<ProfileDetailspage>
     return Scaffold(
       backgroundColor: const Color(0xFFF2F6FF),
       appBar: AppBar(
-        title: const Text('Profile Details'),
-        backgroundColor: const Color.fromARGB(255, 105, 104, 104),
+        centerTitle: true,
+        title: const Text(
+          'Profile Details',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.black,
         elevation: 0,
       ),
       body: ScreenBackGround(

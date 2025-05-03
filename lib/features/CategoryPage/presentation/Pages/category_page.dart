@@ -29,13 +29,14 @@ class _CategoryListViewState extends State<CategoryPage> {
         title: const Text(
           'Categories',
           style: TextStyle(
+            color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 22,
             letterSpacing: 0.5,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
       ),
       extendBodyBehindAppBar: true,

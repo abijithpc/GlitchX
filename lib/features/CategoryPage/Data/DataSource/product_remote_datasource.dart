@@ -13,23 +13,32 @@ class ProductRemoteDatasource {
             .where('category', isEqualTo: category)
             .get();
 
+    List<ProductModel> products =
+        snapshot.docs.map((doc) {
+          final data = doc.data();
 
-    return snapshot.docs.map((doc) {
-      final data = doc.data();
-      return ProductModel(
-        id: doc.id,
-        name: data['name'],
-        description: data['description'],
-        category: data['category'],
-        diskCount: int.parse(data['diskCount'].toString()),
-        price: int.parse(data['price'].toString()),
-        stock: int.parse(data['stock'].toString()),
-        minSpecs: data['minSpecs'],
-        recSpecs: data['recSpecs'],
-        releaseDate: _fromTimestamp(data['releaseDate']),
-        imageUrl: data['imageUrl'],
-      );
-    }).toList();
+          // Fetch imageUrl and handle cases where it's empty or missing
+          final imageUrls = List<String>.from(data['imageUrls'] ?? []);
+
+          print('Fetched Image URL: $imageUrls'); // Debug print
+
+          return ProductModel(
+            id: doc.id,
+            name: data['name'],
+            description: data['description'],
+            category: data['category'],
+            diskCount: int.parse(data['diskCount'].toString()),
+            price: int.parse(data['price'].toString()),
+            stock: int.parse(data['stock'].toString()),
+            minSpecs: data['minSpecs'],
+            recSpecs: data['recSpecs'],
+            releaseDate: _fromTimestamp(data['releaseDate']),
+            imageUrls: imageUrls,
+          );
+        }).toList();
+
+    print('Loaded ${products.length} products'); // Debug print
+    return products;
   }
 
   DateTime _fromTimestamp(dynamic timestamp) {

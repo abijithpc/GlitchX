@@ -10,6 +10,7 @@ class ProductLoaded extends ProductState {
   final List<ProductModel> products;
 
   ProductLoaded(this.products);
+  List<Object?> get props => [products];
 }
 
 class ProductError extends ProductState {

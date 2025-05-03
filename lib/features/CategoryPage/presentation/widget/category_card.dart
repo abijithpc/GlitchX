@@ -28,7 +28,6 @@ class CategoryCard extends StatelessWidget {
                   builder: (_) => ProductListPage(category: category.name),
                 ),
               );
-              debugPrint("Tapped on ${category.name}");
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
