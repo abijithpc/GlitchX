@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/category_card.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/categories_state.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
@@ -11,6 +11,7 @@ class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CategoryListViewState createState() => _CategoryListViewState();
 }
 
@@ -41,6 +42,7 @@ class _CategoryListViewState extends State<CategoryPage> {
       ),
       extendBodyBehindAppBar: true,
       body: ScreenBackGround(
+        alignment: Alignment.center,
         screenHeight: screen.height,
         screenWidth: screen.width,
         widget: BlocBuilder<UserCategoryBloc, UserCategoryState>(

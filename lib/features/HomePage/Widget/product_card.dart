@@ -1,12 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
-import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
-import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/product_details_page.dart';
-import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/showquantity_dialog.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.products});
@@ -150,25 +144,7 @@ class ProductCard extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: ElevatedButton(
-                              onPressed: () {
-                                showQuantityDialog(context, (quantity) {
-                                  final user =
-                                      FirebaseAuth.instance.currentUser;
-                                  if (user == null) return;
-
-                                  final cartItem = CartModel(
-                                    userId: user.uid,
-                                    productId: product.id!,
-                                    name: product.name,
-                                    price: product.price,
-                                    quantity: quantity,
-                                    imageUrl: product.imageUrls.first,
-                                  );
-                                  context.read<CartBloc>().add(
-                                    AddProductToCartEvent(cartItem),
-                                  );
-                                });
-                              },
+                              onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 foregroundColor: Colors.white,

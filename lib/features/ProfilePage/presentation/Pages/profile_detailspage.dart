@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_state.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/widget/profile_details_field.dart';
@@ -52,6 +52,7 @@ class _ProfileDetailspageState extends State<ProfileDetailspage>
         elevation: 0,
       ),
       body: ScreenBackGround(
+        alignment: Alignment.center,
         screenWidth: MediaQuery.of(context).size.width,
         screenHeight: MediaQuery.of(context).size.height,
         widget: BlocBuilder<ProfileBloc, ProfileState>(
@@ -66,7 +67,19 @@ class _ProfileDetailspageState extends State<ProfileDetailspage>
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Text(
+                        "👋 Welcome back!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                        textAlign: TextAlign.end,
+                      ),
+                      SizedBox(height: 30),
                       ProfileHeader(
                         username: user.username,
                         email: user.email,

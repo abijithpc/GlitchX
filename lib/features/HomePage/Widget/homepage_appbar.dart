@@ -14,10 +14,18 @@ AppBar HomePage_AppBar(String locationText) {
       Center(
         child: Padding(
           padding: EdgeInsets.only(right: 16.0),
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(Icons.location_on, color: Colors.red),
+              Row(
+                children: [
+                  Icon(Icons.location_on, color: Colors.red),
+                  Text(
+                    "Selected Location",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
               SizedBox(
                 width: 200.0,
                 child: Text(

@@ -1,215 +1,249 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
+import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_state.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/showquantity_dialog.dart';
 
-class ProductDetailsPageCard extends StatelessWidget {
+class ProductDetailsPageCard extends StatefulWidget {
   const ProductDetailsPageCard({super.key, required this.product});
 
   final ProductModel product;
 
   @override
+  State<ProductDetailsPageCard> createState() => _ProductDetailsPageCardState();
+}
+
+class _ProductDetailsPageCardState extends State<ProductDetailsPageCard> {
+  int _currentImageIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+    final screenWidth = screen.width;
+    final screenHeight = screen.height;
 
-    List<String> imageList = _getImageList(product.imageUrls);
+    List<String> imageList = _getImageList(widget.product.imageUrls);
 
     return Scaffold(
       body: ScreenBackGround(
+        alignment: Alignment.center,
+        screenHeight: screenHeight,
+        screenWidth: screenWidth,
         widget: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(screenWidth * 0.02), // Reduced padding
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Carousel for images (single or multiple images)
                     CarouselSlider(
                       options: CarouselOptions(
-                        height: 250, // Adjust carousel height
-                        enlargeCenterPage: true,
+                        height: screenHeight * 0.3,
                         autoPlay: true,
-                        viewportFraction: 1.0,
+                        enlargeCenterPage: true,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _currentImageIndex = index;
+                          });
+                        },
                       ),
                       items:
                           imageList.map((url) {
                             return ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(16),
                               child: Image.network(
                                 url,
-                                fit: BoxFit.contain,
+                                fit: BoxFit.cover,
                                 width: double.infinity,
                               ),
                             );
                           }).toList(),
                     ),
-                    SizedBox(height: 16),
-
-                    // Display a set of thumbnail images if there are multiple images
-                    if (imageList.length > 1)
-                      SizedBox(
-                        height: 100,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: imageList.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                // On thumbnail click, update main image (implement logic if needed)
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    imageList[index],
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
+                    SizedBox(height: screenHeight * 0.02),
+                    Center(
+                      child: Text(
+                        widget.product.name,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.08, // Adjusted font size
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                      )
-                    else
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text(
-                          'No additional images available',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.015), // Reduced gap
+                    // Full-width Description
+                    _buildInfoTile(
+                      Icons.description,
+                      "Description",
+                      widget.product.description,
+                      fontSize: screenWidth * 0.04, // Dynamic font size
+                      screenHeight: screenHeight,
+                      screenWidth: screenWidth,
+                    ),
+
+                    // Row 1: Category & Disk Count
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildInfoTile(
+                            Icons.category,
+                            "Category",
+                            widget.product.category,
+                            fontSize: screenWidth * 0.04, // Dynamic font size
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth,
                           ),
                         ),
-                      ),
-                    SizedBox(height: 16),
-
-                    // Product name with a header
-                    Text(
-                      product.name,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                        SizedBox(width: screenWidth * 0.03), // Reduced gap
+                        Expanded(
+                          child: _buildInfoTile(
+                            Icons.album,
+                            "Disk Count",
+                            widget.product.diskCount.toString(),
+                            fontSize: screenWidth * 0.04, // Dynamic font size
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 8),
 
-                    // Product description
-                    _buildSectionHeader('Description'),
-                    Text(
-                      product.description,
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                    // Row 2: Price & Stock
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildInfoTile(
+                            Icons.attach_money,
+                            "Price",
+                            "₹${widget.product.price}",
+                            textColor: Colors.green,
+                            fontSize: screenWidth * 0.04, // Dynamic font size
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth,
+                          ),
+                        ),
+                        SizedBox(width: screenWidth * 0.03), // Reduced gap
+                        Expanded(
+                          child: _buildInfoTile(
+                            Icons.inventory,
+                            "Stock",
+                            "${widget.product.stock} in stock",
+                            textColor:
+                                widget.product.stock > 0
+                                    ? Colors.green
+                                    : Colors.red,
+                            fontSize: screenWidth * 0.04, // Dynamic font size
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 12),
 
-                    // Category Section
-                    _buildSectionHeader('Category'),
-                    Text(
-                      product.category,
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
+                    // Row 3: Release Date
+                    _buildInfoTile(
+                      Icons.calendar_today,
+                      "Release Date",
+                      "${widget.product.releaseDate.toLocal()}",
+                      fontSize: screenWidth * 0.04, // Dynamic font size
+                      screenHeight: screenHeight,
+                      screenWidth: screenWidth,
                     ),
-                    SizedBox(height: 12),
 
-                    // Disk Count
-                    _buildSectionHeader('Disk Count'),
-                    Text(
-                      '${product.diskCount}',
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
+                    // Row 4: Min & Rec Specs
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildInfoTile(
+                            Icons.settings_input_component,
+                            "Minimum Specs",
+                            widget.product.minSpecs,
+                            fontSize: screenWidth * 0.04, // Dynamic font size
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth,
+                          ),
+                        ),
+                        SizedBox(width: screenWidth * 0.03), // Reduced gap
+                        Expanded(
+                          child: _buildInfoTile(
+                            Icons.settings,
+                            "Recommended Specs",
+                            widget.product.recSpecs,
+                            fontSize: screenWidth * 0.04, // Dynamic font size
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 12),
-
-                    // Price
-                    _buildSectionHeader('Price'),
-                    Text(
-                      '₹${product.price}',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-
-                    // Stock Info
-                    _buildSectionHeader('Stock'),
-                    Text(
-                      '${product.stock} in stock',
-                      style: TextStyle(
-                        color: product.stock > 0 ? Colors.green : Colors.red,
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-
-                    // Release Date
-                    _buildSectionHeader('Release Date'),
-                    Text(
-                      "${product.releaseDate.toLocal()}",
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
-                    ),
-                    SizedBox(height: 12),
-
-                    // Minimum Specs
-                    _buildSectionHeader('Minimum Specs'),
-                    Text(
-                      product.minSpecs,
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
-                    SizedBox(height: 12),
-
-                    // Recommended Specs
-                    _buildSectionHeader('Recommended Specs'),
-                    Text(
-                      product.recSpecs,
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
-                    SizedBox(height: 120), // Space for buttons
                   ],
                 ),
               ),
             ),
 
-            // Buttons at the bottom
+            // Action Buttons
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(screenWidth * 0.03), // Adjusted padding
               child: Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Implement the "Buy Now" functionality
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        showQuantityDialog(context, (quantity) {
+                          final user = FirebaseAuth.instance.currentUser;
+                          if (user == null) return;
+
+                          final cartItem = CartModel(
+                            userId: user.uid,
+                            productId: widget.product.id!,
+                            name: widget.product.name,
+                            price: widget.product.price,
+                            quantity: quantity,
+                            imageUrl: widget.product.imageUrls.first,
+                          );
+                          context.read<CartBloc>().add(
+                            AddProductToCartEvent(cartItem),
+                          );
+                        });
                       },
+                      icon: Icon(Icons.shopping_cart_outlined),
+                      label: Text("Add to Cart"),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Colors.green,
+                        padding: EdgeInsets.symmetric(
+                          vertical:
+                              screenHeight * 0.015, // Reduced vertical padding
+                        ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Text("Add to Cart"),
                     ),
                   ),
-                  SizedBox(width: 16),
+                  SizedBox(width: screenWidth * 0.03), // Reduced gap
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Implement the "Add to Cart" functionality
-                      },
+                    child: ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: Icon(Icons.payment),
+                      label: Text("Buy Now"),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(
+                          vertical:
+                              screenHeight * 0.015, // Reduced vertical padding
+                        ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Text("Buy Now"),
                     ),
                   ),
                 ],
@@ -217,37 +251,74 @@ class ProductDetailsPageCard extends StatelessWidget {
             ),
           ],
         ),
-        screenHeight: screen.height,
-        screenWidth: screen.width,
       ),
     );
   }
 
-  // Helper function to create section headers
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
+  Widget _buildInfoTile(
+    IconData icon,
+    String label,
+    String value, {
+    Color? textColor,
+    double? fontSize,
+    required double screenWidth,
+    required double screenHeight,
+  }) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.01,
+      ), // Reduced vertical margin
+      padding: EdgeInsets.all(
+        screenWidth * 0.03,
+      ), // Adjusted padding based on screen width
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white12),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 4)),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: Colors.white70, size: 24),
+          SizedBox(width: screenWidth * 0.03), // Adjusted gap
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontWeight: FontWeight.bold,
+                    fontSize:
+                        fontSize ??
+                        screenWidth * 0.04, // Default font size if not provided
+                  ),
+                ),
+                SizedBox(height: screenHeight * 0.005), // Reduced gap
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: textColor ?? Colors.grey[300],
+                    fontSize:
+                        fontSize ?? screenWidth * 0.04, // Default font size
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // Helper function to safely convert imageUrl into a List<String>
   List<String> _getImageList(dynamic imageUrl) {
-    if (imageUrl is List<String>) {
-      return imageUrl;
-    }
-
-    if (imageUrl is String && imageUrl.isNotEmpty) {
-      return [imageUrl];
-    }
-
+    if (imageUrl is List<String>) return imageUrl;
+    if (imageUrl is String && imageUrl.isNotEmpty) return [imageUrl];
     return [];
   }
 }

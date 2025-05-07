@@ -41,6 +41,8 @@ class EditProfileForm extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.all(20.0),
         children: [
+          _buildCoolSentence(), // Move this to the top for more emphasis
+          const SizedBox(height: 30),
           _buildProfilePicture(),
           const SizedBox(height: 30),
           _buildTextField(
@@ -83,7 +85,7 @@ class EditProfileForm extends StatelessWidget {
         children: [
           ClipOval(
             child: Container(
-              color: Colors.blueGrey.shade50, // Light background for fallback
+              color: Colors.blueGrey.shade50,
               child: CircleAvatar(
                 radius: 70,
                 backgroundImage:
@@ -133,16 +135,16 @@ class EditProfileForm extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(
           vertical: 18,
           horizontal: 16,
-        ), // More padding for the text
+        ),
         labelText: label,
         labelStyle: TextStyle(color: Colors.blueAccent.shade700),
         prefixIcon: Icon(icon, color: Colors.blueAccent.shade700),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30), // More rounded edges
+          borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide(color: Colors.blueAccent.shade700, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30), // Rounded border on focus
+          borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide(color: Colors.blueAccent.shade700, width: 2),
         ),
         enabledBorder: OutlineInputBorder(
@@ -161,7 +163,7 @@ class EditProfileForm extends StatelessWidget {
       label: const Text("Save Changes"),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 14),
-        backgroundColor: Colors.blueAccent.shade700, // Gradient color
+        backgroundColor: Colors.blueAccent.shade700,
         foregroundColor: Colors.white,
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -201,15 +203,29 @@ class EditProfileForm extends StatelessWidget {
       onTap: () async {
         String? selected = await Navigator.push<String>(
           context,
-          MaterialPageRoute(
-            builder: (context) => const LocationSelectionPage(),
-          ),
+          MaterialPageRoute(builder: (context) => const LocationPickerPage()),
         ).then((address) {
           if (address != null) {
             onSelectLocation(address);
           }
         });
       },
+    );
+  }
+
+  Widget _buildCoolSentence() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Text(
+        'Look cool, feel cooler. Make your profile shine with style!',
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }

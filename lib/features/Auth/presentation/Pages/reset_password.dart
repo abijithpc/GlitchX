@@ -4,7 +4,7 @@ import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_event.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_state.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
 
 class ResetPassword extends StatelessWidget {
   ResetPassword({super.key});
@@ -49,6 +49,7 @@ class ResetPassword extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           }
           return ScreenBackGround(
+            alignment: Alignment.center,
             widget: Padding(
               padding: EdgeInsets.symmetric(horizontal: 32.0),
               child: Column(
@@ -93,8 +94,8 @@ class ResetPassword extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple, 
-                      foregroundColor: Colors.white, 
+                      backgroundColor: Colors.deepPurple,
+                      foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(
                         vertical: 16.0,
                         horizontal: 30.0,

@@ -16,6 +16,13 @@ import 'package:glitchxscndprjt/features/Auth/Domain/UseCase/emailverification_u
 
 // Presentation Layer - Bloc
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/Data/DataSource/cartdata_remotesource.dart';
+import 'package:glitchxscndprjt/features/CartPage/Data/Repository/cart_repository_impl.dart';
+import 'package:glitchxscndprjt/features/CartPage/Domain/Repository/cart_repository.dart';
+import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/add_to_cart_usecase.dart';
+import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/get_cart_item_usecase.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Data/DataSource/product_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Data/Repository/product_repo_impl.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Repository/product_repository.dart';
@@ -31,7 +38,6 @@ import 'package:glitchxscndprjt/features/ProfilePage/Data/DataSource/profile_rem
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Repository/profile_repository_imp.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/Repository/profile_auth_repository.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/getprofile_usecase.dart';
-import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/update_location_usecase.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/updateprofileimage_usecase.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/updateuserprofileusecase.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
@@ -57,6 +63,9 @@ Future<void> init() async {
   sl.registerLazySingleton<ProductRemoteDatasource>(
     () => ProductRemoteDatasource(sl()),
   );
+  sl.registerLazySingleton<CartRemoteDataSource>(
+    () => CartRemoteDataSource(sl()),
+  );
 
   // 📦 Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -71,6 +80,7 @@ Future<void> init() async {
   sl.registerLazySingleton<ProductRepository>(
     () => ProductRepositoryImpl(sl()),
   );
+  sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
 
   // ✅ UseCases
   sl.registerLazySingleton(() => SignupUsecase(sl()));
@@ -85,6 +95,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetusercategoriesUsecase(sl()));
   sl.registerLazySingleton(() => GetproductUsecase(sl()));
   sl.registerLazySingleton(() => GetproductidUsecase(sl()));
+  sl.registerLazySingleton(() => AddToCartUseCase(sl()));
+  sl.registerLazySingleton(() => GetCartItemsUseCase(sl()));
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -108,4 +120,7 @@ Future<void> init() async {
   );
   sl.registerFactory(() => UserCategoryBloc(sl()));
   sl.registerFactory(() => ProductBloc(sl(), sl()));
+  sl.registerFactory(
+    () => CartBloc(addToCartUseCase: sl(), getCartItemsUseCase: sl()),
+  );
 }

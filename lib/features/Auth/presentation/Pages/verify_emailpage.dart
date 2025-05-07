@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,7 +53,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
           _timer.cancel();
 
           // ✅ Save user to Firestore
-          await _remoteDataSource.storeuserData(widget.user);
+          await _remoteDataSource.storeUserData(widget.user);
 
           // ✅ Navigate to login page
           Navigator.pushReplacementNamed(context, '/login');

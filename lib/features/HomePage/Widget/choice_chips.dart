@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/category_page.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/product_list_page.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/categories_state.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_event.dart';
@@ -66,12 +66,18 @@ class _CatergoryChoiceChipsState extends State<CatergoryChoiceChips> {
                                     selectedCategoryId = category.id;
                                   });
 
-                                  // 🚀 Emit event to fetch games under this category
-                                  // context.read<GameBloc>().add(
-                                  //   LoadGamesByCategory(
-                                  //     categoryId: category.id,
-                                  //   ),
-                                  // );
+                                  // Navigate to Product List Page
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => ProductListPage(
+                                            category:
+                                                category
+                                                    .name, // Pass category name
+                                          ),
+                                    ),
+                                  );
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
@@ -133,7 +139,6 @@ class _CatergoryChoiceChipsState extends State<CatergoryChoiceChips> {
             return const SizedBox.shrink();
           },
         ),
-
         const SizedBox(height: 10),
       ],
     );

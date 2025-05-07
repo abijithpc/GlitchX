@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_event.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_state.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/product_card.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/sorting_filter_page.dart';
 
 class ProductListPage extends StatefulWidget {
   final String category;
@@ -32,8 +33,24 @@ class _ProductListPageState extends State<ProductListPage> {
         title: Text(widget.category, style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => SortingFilterPage(category: widget.category),
+                ),
+              );
+            },
+            icon: Icon(Icons.sort),
+            color: Colors.white,
+          ),
+        ],
       ),
       body: ScreenBackGround(
+        alignment: Alignment.center,
         widget: BlocBuilder<ProductBloc, ProductState>(
           builder: (context, state) {
             if (state is ProductLoading) {

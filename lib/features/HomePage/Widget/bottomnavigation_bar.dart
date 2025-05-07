@@ -1,21 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartPage.dart';
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Pages/homepage.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_page.dart';
-import 'package:glitchxscndprjt/features/SearchPage/presentation/Pages/search_page.dart';
+import 'package:glitchxscndprjt/features/purchase_product_page/presentation/Pages/search_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class PersistentBottomNavigationBar extends StatelessWidget {
   PersistentBottomNavigationBar({super.key});
 
   final PersistentTabController _controller = PersistentTabController();
+  final String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
-  final List<Widget> _pages = [
+  List<Widget> get _pages => [
     Homepage(),
     SearchPage(),
-    Cartpage(),
+    CartPage(),
     ProfilePage(),
   ];
 
@@ -24,10 +26,10 @@ class PersistentBottomNavigationBar extends StatelessWidget {
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
         title: ("Home"),
-        activeColorPrimary: Colors.white, // <-- White for visibility
-        activeColorSecondary: Colors.blueAccent, // optional ripple/outline
+        activeColorPrimary: Colors.white,
+        activeColorSecondary: Colors.blueAccent,
         inactiveColorPrimary: Colors.grey,
-        textStyle: TextStyle(color: Colors.white), // also helpful
+        textStyle: TextStyle(color: Colors.white),
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.search),

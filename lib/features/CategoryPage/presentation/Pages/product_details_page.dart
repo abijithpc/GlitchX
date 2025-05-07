@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_event.dart';
@@ -48,6 +48,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         ),
       ),
       body: ScreenBackGround(
+        alignment: Alignment.center,
         widget: BlocBuilder<ProductBloc, ProductState>(
           builder: (context, state) {
             if (state is ProductLoading) {

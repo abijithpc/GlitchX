@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_state.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_event.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
@@ -48,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
             return const Center(child: CupertinoActivityIndicator());
           } else if (state is ProfileLoaded) {
             return ScreenBackGround(
+              alignment: Alignment.center,
               screenHeight: MediaQuery.of(context).size.height,
               screenWidth: MediaQuery.of(context).size.width,
               widget: SafeArea(

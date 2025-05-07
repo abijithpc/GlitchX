@@ -5,7 +5,7 @@ import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_event.dart'
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_state.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/reset_password.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/signuppage.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/HomePage/Widget/bottomnavigation_bar.dart';
 import 'package:lottie/lottie.dart';
 
@@ -87,6 +87,7 @@ class _LoginpageState extends State<Loginpage> {
         },
         builder: (context, state) {
           return ScreenBackGround(
+            alignment: Alignment.center,
             widget: SingleChildScrollView(
               child: Form(
                 key: _formKey,

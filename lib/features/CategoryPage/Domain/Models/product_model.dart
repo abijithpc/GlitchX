@@ -12,6 +12,7 @@ class ProductModel {
   final String recSpecs;
   final DateTime releaseDate;
   final List<String> imageUrls;
+  final double rating;
 
   ProductModel({
     this.id,
@@ -25,6 +26,7 @@ class ProductModel {
     required this.recSpecs,
     required this.releaseDate,
     required this.imageUrls,
+    required this.rating,
   });
 
   // Map<String, dynamic> toMap() {
@@ -56,6 +58,7 @@ class ProductModel {
       recSpecs: map['recSpecs'],
       releaseDate: _fromTimestamp(map['releaseDate']),
       imageUrls: List<String>.from(map['imageUrls'] ?? []),
+      rating: (map['rating'] ?? 0).toDouble(),
     );
   }
 
@@ -98,6 +101,7 @@ class ProductModel {
       recSpecs: recSpecs ?? this.recSpecs,
       releaseDate: releaseDate ?? this.releaseDate,
       imageUrls: imageUrl ?? this.imageUrls,
+      rating: rating ?? this.rating,
     );
   }
 }

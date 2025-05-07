@@ -8,11 +8,13 @@ class ScreenBackGround extends StatelessWidget {
     super.key,
     required this.screenHeight,
     required this.screenWidth,
+    required this.alignment,
   });
 
   final double screenHeight;
   final double screenWidth;
   Widget widget;
+  Alignment alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,8 @@ class ScreenBackGround extends StatelessWidget {
           colors: [const Color.fromARGB(255, 122, 0, 0), Colors.black],
         ),
       ),
-      child: Center(
+      child: Align(
+        alignment: alignment,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: widget,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Bloc/auth_state.dart';
-import 'package:glitchxscndprjt/features/Auth/presentation/widget/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/widget/singup_form.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/widget/singup_helper.dart';
 
@@ -50,6 +50,7 @@ class _SignuppageState extends State<Signuppage> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return ScreenBackGround(
+              alignment: Alignment.center,
               screenHeight: constraints.maxHeight,
               screenWidth: constraints.maxWidth,
               widget: SignupForm(

@@ -8,7 +8,7 @@ import '../../Data/Models/user_model.dart';
 import '../Bloc/profilebloc.dart';
 import '../Bloc/profile_event.dart';
 import '../Bloc/profile_state.dart';
-import '../../../Auth/presentation/widget/screenbackground.dart';
+import '../../../../Core/screenbackground.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -66,7 +66,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -95,6 +94,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           }
 
           return ScreenBackGround(
+            alignment: Alignment.center,
             screenHeight: screen.height,
             screenWidth: screen.width,
             widget: Padding(

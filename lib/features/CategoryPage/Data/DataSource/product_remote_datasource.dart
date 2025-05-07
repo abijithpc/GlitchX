@@ -34,6 +34,7 @@ class ProductRemoteDatasource {
             recSpecs: data['recSpecs'],
             releaseDate: _fromTimestamp(data['releaseDate']),
             imageUrls: imageUrls,
+            rating: (data['rating'] ?? 0).toDouble(),
           );
         }).toList();
 
