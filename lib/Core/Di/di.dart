@@ -21,8 +21,8 @@ import 'package:glitchxscndprjt/features/CartPage/Data/Repository/cart_repositor
 import 'package:glitchxscndprjt/features/CartPage/Domain/Repository/cart_repository.dart';
 import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/add_to_cart_usecase.dart';
 import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/get_cart_item_usecase.dart';
+import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/removeproductcart_usecase.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
-import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Data/DataSource/product_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Data/Repository/product_repo_impl.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Repository/product_repository.dart';
@@ -34,6 +34,13 @@ import 'package:glitchxscndprjt/features/HomePage/Data/Repository/user_category_
 import 'package:glitchxscndprjt/features/HomePage/Domain/Repository/user_categoryrepository.dart';
 import 'package:glitchxscndprjt/features/HomePage/Domain/UseCase/getusercategories_usecase.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/DataSource/address_remotedatasource.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/Repository/address_repositoryimpl.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/Repository/address_repository.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/addaddress_usecase.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/getaddress_usecase.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/setdefaultaddress__usecase.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/DataSource/profile_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Repository/profile_repository_imp.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/Repository/profile_auth_repository.dart';
@@ -66,6 +73,9 @@ Future<void> init() async {
   sl.registerLazySingleton<CartRemoteDataSource>(
     () => CartRemoteDataSource(sl()),
   );
+  sl.registerLazySingleton<AddressRemotedatasource>(
+    () => AddressRemotedatasource(sl(), sl()),
+  );
 
   // 📦 Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -82,6 +92,10 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
 
+  sl.registerLazySingleton<AddressRepository>(
+    () => AddressRepositoryimpl(sl()),
+  );
+
   // ✅ UseCases
   sl.registerLazySingleton(() => SignupUsecase(sl()));
   sl.registerLazySingleton(() => LoginUsecase(sl()));
@@ -97,6 +111,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetproductidUsecase(sl()));
   sl.registerLazySingleton(() => AddToCartUseCase(sl()));
   sl.registerLazySingleton(() => GetCartItemsUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveproductcartUsecase(sl()));
+  sl.registerLazySingleton(() => AddaddressUsecase(sl()));
+  sl.registerLazySingleton(() => GetAddressesUseCase(sl()));
+  sl.registerLazySingleton(() => SetDefaultAddressUseCase(sl()));
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -120,7 +138,20 @@ Future<void> init() async {
   );
   sl.registerFactory(() => UserCategoryBloc(sl()));
   sl.registerFactory(() => ProductBloc(sl(), sl()));
+
   sl.registerFactory(
-    () => CartBloc(addToCartUseCase: sl(), getCartItemsUseCase: sl()),
+    () => CartBloc(
+      addToCartUseCase: sl(),
+      getCartItemsUseCase: sl(),
+      removeproductcartUsecase: sl(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => AddressBloc(
+      addAddressUseCase: sl(),
+      getAddressesUseCase: sl(),
+      setDefaultAddressUseCase: sl(),
+    ),
   );
 }

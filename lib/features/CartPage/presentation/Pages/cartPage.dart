@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
+import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_state.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/widget/cartpage_card.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -60,160 +62,28 @@ class _CartPageState extends State<CartPage> {
               (sum, item) => sum + (item.price * item.quantity),
             );
 
+            final int totalItems = cartItems.fold(
+              0,
+              (sum, item) => sum + item.quantity,
+            );
+
+            final double shippingFee = subtotal < 100 ? 99.0 : 0.0;
+
+            final double grandTotal = subtotal + shippingFee;
+
             return ScreenBackGround(
               screenHeight: screenHeight,
               screenWidth: screenWidth,
               alignment: Alignment.center,
               widget: Padding(
                 padding: EdgeInsets.all(screenWidth * 0.04),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: cartItems.length,
-                        separatorBuilder:
-                            (_, __) => const Divider(color: Colors.white12),
-                        itemBuilder: (context, index) {
-                          final item = cartItems[index];
-                          return Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child:
-                                    item.imageUrl.isNotEmpty
-                                        ? Image.network(
-                                          item.imageUrl,
-                                          width: screenWidth * 0.2,
-                                          height: screenWidth * 0.2,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (
-                                            context,
-                                            error,
-                                            stackTrace,
-                                          ) {
-                                            return Icon(
-                                              Icons.broken_image,
-                                              color: Colors.white54,
-                                              size: screenWidth * 0.2,
-                                            );
-                                          },
-                                        )
-                                        : Icon(
-                                          Icons.broken_image,
-                                          color: Colors.white54,
-                                          size: screenWidth * 0.2,
-                                        ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item.name,
-                                      style: TextStyle(
-                                        fontSize: screenWidth * 0.045,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '₹${item.price}',
-                                      style: TextStyle(
-                                        fontSize: screenWidth * 0.04,
-                                        color: Colors.greenAccent,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Qty: ${item.quantity}',
-                                          style: TextStyle(
-                                            fontSize: screenWidth * 0.04,
-                                            color: Colors.white70,
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        IconButton(
-                                          onPressed: () {
-                                            context.read<CartBloc>().add(
-                                              RemoveCartItemEvent(item.userId),
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            color: Colors.redAccent,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(screenWidth * 0.04),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[900],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Subtotal:',
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.045,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const Spacer(),
-                              Text(
-                                '₹$subtotal',
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.05,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // TODO: Add checkout logic
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                padding: EdgeInsets.symmetric(
-                                  vertical: screenHeight * 0.018,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Text(
-                                'Proceed to Checkout',
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.045,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                child: CartPageCard(
+                  cartItems: cartItems,
+                  screenWidth: screenWidth,
+                  totalItems: totalItems,
+                  shippingFee: shippingFee,
+                  grandTotal: grandTotal,
+                  screenHeight: screenHeight,
                 ),
               ),
             );

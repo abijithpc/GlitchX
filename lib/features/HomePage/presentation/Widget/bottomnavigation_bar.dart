@@ -5,7 +5,7 @@ import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartPage.da
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Pages/homepage.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_page.dart';
-import 'package:glitchxscndprjt/features/purchase_product_page/presentation/Pages/search_page.dart';
+import 'package:glitchxscndprjt/features/SearchPage/presentation/Pages/search_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class PersistentBottomNavigationBar extends StatelessWidget {

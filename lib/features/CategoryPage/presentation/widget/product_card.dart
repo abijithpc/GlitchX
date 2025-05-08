@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartPage.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/product_details_page.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/showquantity_dialog.dart';
@@ -163,9 +164,54 @@ class ProductCard extends StatelessWidget {
                                     price: product.price,
                                     quantity: quantity,
                                     imageUrl: product.imageUrls.first,
+                                    category: product.category,
                                   );
                                   context.read<CartBloc>().add(
                                     AddProductToCartEvent(cartItem),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: [
+                                          Text(
+                                            "Item added Successfully",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (context) => CartPage(),
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              "Go To Cart",
+                                              style: TextStyle(
+                                                color: Colors.yellow[700],
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      backgroundColor: Colors.green,
+                                      behavior: SnackBarBehavior.floating,
+                                      duration: const Duration(seconds: 3),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                    ),
                                   );
                                 });
                               },

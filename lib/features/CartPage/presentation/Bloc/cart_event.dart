@@ -16,6 +16,13 @@ class FetchCartItemsEvent extends CartEvent {
 
 class RemoveCartItemEvent extends CartEvent {
   final String productId;
+  final String userId;
 
-  RemoveCartItemEvent(this.productId);
+  RemoveCartItemEvent(this.productId, this.userId);
+}
+
+class LoadCartItemsEvent extends CartEvent {
+  final String userId;
+
+  LoadCartItemsEvent(this.userId);
 }

@@ -1,0 +1,270 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Pages/order_summary_page.dart';
+
+class CartPageCard extends StatelessWidget {
+  final List<CartModel> cartItems;
+  final double screenWidth;
+  final int totalItems;
+  final double shippingFee;
+  final double grandTotal;
+  final double screenHeight;
+
+  const CartPageCard({
+    super.key,
+    required this.cartItems,
+    required this.screenWidth,
+    required this.totalItems,
+    required this.shippingFee,
+    required this.grandTotal,
+    required this.screenHeight,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.separated(
+            itemCount: cartItems.length,
+            separatorBuilder: (_, __) => const Divider(color: Colors.white12),
+            itemBuilder: (context, index) {
+              final item = cartItems[index];
+              return _buildCartItem(context, item);
+            },
+          ),
+        ),
+        const SizedBox(height: 12),
+        _buildSummaryCard(context),
+      ],
+    );
+  }
+
+  Widget _buildCartItem(BuildContext context, CartModel item) {
+    return Container(
+      padding: EdgeInsets.all(screenWidth * 0.03),
+      decoration: BoxDecoration(
+        color: Colors.grey[850],
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child:
+                item.imageUrl.isNotEmpty
+                    ? Image.network(
+                      item.imageUrl,
+                      width: screenWidth * 0.22,
+                      height: screenWidth * 0.22,
+                      fit: BoxFit.cover,
+                      errorBuilder:
+                          (_, __, ___) => Icon(
+                            Icons.broken_image,
+                            color: Colors.white54,
+                            size: screenWidth * 0.22,
+                          ),
+                    )
+                    : Icon(
+                      Icons.broken_image,
+                      color: Colors.white54,
+                      size: screenWidth * 0.22,
+                    ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.048,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  '₹${item.price}',
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.043,
+                    color: Colors.greenAccent,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Text(
+                      'Qty: ${item.quantity}',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.042,
+                        color: Colors.white70,
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () => _showDeleteDialog(context, item),
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.redAccent,
+                        size: 26,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(screenWidth * 0.045),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[850],
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildSummaryRow("Total Items", '$totalItems'),
+          const SizedBox(height: 10),
+          _buildSummaryRow(
+            "Shipping Fee",
+            shippingFee == 0 ? "Free" : '₹$shippingFee',
+            valueColor: shippingFee == 0 ? Colors.green : Colors.orangeAccent,
+          ),
+          const SizedBox(height: 10),
+          _buildSummaryRow(
+            "Grand Total",
+            '₹$grandTotal',
+            isBold: true,
+            valueColor: Colors.greenAccent,
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).push(
+                  MaterialPageRoute(
+                    builder:
+                        (_) => OrderSummaryPage(
+                          cartItems: cartItems,
+                          grandTotal: grandTotal,
+                          shippingFee: shippingFee,
+                          totalItems: totalItems,
+                        ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.018),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              icon: const Icon(
+                Icons.shopping_cart_checkout,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Proceed to Checkout',
+                style: TextStyle(
+                  fontSize: screenWidth * 0.045,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(
+    String label,
+    String value, {
+    bool isBold = false,
+    Color? valueColor,
+  }) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: screenWidth * 0.045,
+            color: Colors.white70,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: screenWidth * 0.045,
+            color: valueColor ?? Colors.white,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, CartModel item) {
+    showCupertinoDialog(
+      context: context,
+      builder:
+          (_) => CupertinoAlertDialog(
+            title: const Text("Delete Cart Item"),
+            content: const Text("Are you sure you want to delete this item?"),
+            actions: [
+              CupertinoDialogAction(
+                isDestructiveAction: true,
+                onPressed: () {
+                  final userId = FirebaseAuth.instance.currentUser?.uid;
+                  if (userId != null) {
+                    context.read<CartBloc>().add(
+                      RemoveCartItemEvent(item.productId, userId),
+                    );
+                  }
+                  Navigator.pop(context);
+                },
+                child: const Text("Delete"),
+              ),
+              CupertinoDialogAction(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+            ],
+          ),
+    );
+  }
+}

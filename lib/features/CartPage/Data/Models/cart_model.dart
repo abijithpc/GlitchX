@@ -5,6 +5,7 @@ class CartModel {
   final String imageUrl;
   final int price;
   final int quantity;
+  final String category;
 
   CartModel({
     required this.userId,
@@ -13,6 +14,7 @@ class CartModel {
     required this.price,
     required this.quantity,
     required this.imageUrl,
+    required this.category,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +25,7 @@ class CartModel {
       'price': price,
       'quantity': quantity,
       'imageUrl': imageUrl,
+      'category': category,
     };
   }
 
@@ -33,7 +36,8 @@ class CartModel {
       name: json['name'] ?? '',
       price: json['price'] ?? 0,
       quantity: json['quantity'] ?? 0,
-      imageUrl: json['imageUrl'] ?? '', // Ensure this is being set correctly
+      imageUrl: json['imageUrl'] ?? '',
+      category: json['category' as String] ?? '',
     );
   }
 }

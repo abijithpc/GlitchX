@@ -14,4 +14,9 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<List<CartModel>> fetchCartItems(String userId) =>
       remoteDataSource.fetchCartItems(userId);
+
+  @override
+  Future<void> removeProductsFromCart(String userId, String productId) {
+    return remoteDataSource.removeCartItems(userId, productId);
+  }
 }

@@ -5,11 +5,12 @@ import 'package:glitchxscndprjt/features/Auth/presentation/Pages/reset_password.
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
-import 'package:glitchxscndprjt/features/HomePage/Widget/bottomnavigation_bar.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/bottomnavigation_bar.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Pages/homepage.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/signuppage.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/edit_profile.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_detailspage.dart';
@@ -38,7 +39,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<ProfileBloc>()),
         BlocProvider(create: (context) => di.sl<UserCategoryBloc>()),
         BlocProvider(create: (context) => di.sl<ProductBloc>()),
-        BlocProvider(create: (context) => di.sl<CartBloc>(),),
+        BlocProvider(create: (context) => di.sl<CartBloc>()),
+        BlocProvider(create: (context) => di.sl<AddressBloc>()),
       ],
       child: Builder(
         builder:

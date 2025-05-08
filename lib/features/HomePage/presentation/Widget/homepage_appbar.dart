@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glitchxscndprjt/features/HomePage/Widget/shimmer_clipoval.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/shimmer_clipoval.dart';
 
 AppBar HomePage_AppBar(String locationText) {
   return AppBar(
