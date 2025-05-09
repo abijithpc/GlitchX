@@ -14,8 +14,8 @@ AppBar HomePage_AppBar(String locationText) {
       Center(
         child: Padding(
           padding: EdgeInsets.only(right: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
                 children: [
@@ -27,7 +27,7 @@ AppBar HomePage_AppBar(String locationText) {
                 ],
               ),
               SizedBox(
-                width: 200.0,
+                width: 120.0,
                 child: Text(
                   locationText,
                   style: TextStyle(color: Colors.white),

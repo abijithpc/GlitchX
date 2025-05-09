@@ -17,7 +17,7 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   }) : super(AddressInitial()) {
     on<LoadAddresses>(_onLoadAddresses);
     on<AddNewAddress>(_onAddNewAddress);
-    on<SelectAddress>(_onSelectAddress);
+    on<SelectAddress>(onSelectAddress);
   }
 
   Future<void> _onLoadAddresses(
@@ -45,13 +45,20 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     }
   }
 
-  Future<void> _onSelectAddress(
+  Future<void> onSelectAddress(
     SelectAddress event,
     Emitter<AddressState> emit,
   ) async {
     try {
+      final addresses = await getAddressesUseCase();
+      final selectedAddress = addresses.firstWhere(
+        (address) => address.id == event.addressId,
+        orElse: () => throw Exception("Address not found"),
+      );
+
       await setDefaultAddressUseCase(event.addressId);
       add(LoadAddresses());
+      emit(AddressSelectedState(selectedAddress));
     } catch (e) {
       emit(AddressError(e.toString()));
     }

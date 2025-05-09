@@ -241,30 +241,35 @@ class CartPageCard extends StatelessWidget {
   void _showDeleteDialog(BuildContext context, CartModel item) {
     showCupertinoDialog(
       context: context,
-      builder:
-          (_) => CupertinoAlertDialog(
-            title: const Text("Delete Cart Item"),
-            content: const Text("Are you sure you want to delete this item?"),
-            actions: [
-              CupertinoDialogAction(
-                isDestructiveAction: true,
-                onPressed: () {
-                  final userId = FirebaseAuth.instance.currentUser?.uid;
-                  if (userId != null) {
+      builder: (dialogContext) {
+        return CupertinoAlertDialog(
+          title: const Text("Delete Cart Item"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: [
+            CupertinoDialogAction(
+              isDestructiveAction: true,
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Close the dialog
+
+                final userId = FirebaseAuth.instance.currentUser?.uid;
+
+                if (userId != null) {
+                  Future.delayed(const Duration(milliseconds: 100), () {
                     context.read<CartBloc>().add(
                       RemoveCartItemEvent(item.productId, userId),
                     );
-                  }
-                  Navigator.pop(context);
-                },
-                child: const Text("Delete"),
-              ),
-              CupertinoDialogAction(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("Cancel"),
-              ),
-            ],
-          ),
+                  });
+                }
+              },
+              child: const Text("Delete"),
+            ),
+            CupertinoDialogAction(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

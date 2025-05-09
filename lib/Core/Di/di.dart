@@ -35,12 +35,17 @@ import 'package:glitchxscndprjt/features/HomePage/Domain/Repository/user_categor
 import 'package:glitchxscndprjt/features/HomePage/Domain/UseCase/getusercategories_usecase.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/DataSource/address_remotedatasource.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/DataSource/razorpay_datasource.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Repository/address_repositoryimpl.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/Repository/payment_repositoryimpl.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/Repository/address_repository.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/Repository/payment_repository.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/addaddress_usecase.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/getaddress_usecase.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/initialpayment_usecase.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/setdefaultaddress__usecase.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_bloc.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/DataSource/profile_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Repository/profile_repository_imp.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/Repository/profile_auth_repository.dart';
@@ -76,6 +81,7 @@ Future<void> init() async {
   sl.registerLazySingleton<AddressRemotedatasource>(
     () => AddressRemotedatasource(sl(), sl()),
   );
+  sl.registerLazySingleton<RazorpayDatasource>(() => RazorpayDatasource());
 
   // 📦 Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -94,6 +100,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton<AddressRepository>(
     () => AddressRepositoryimpl(sl()),
+  );
+  sl.registerLazySingleton<PaymentRepository>(
+    () => PaymentRepositoryimpl(sl()),
   );
 
   // ✅ UseCases
@@ -115,6 +124,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AddaddressUsecase(sl()));
   sl.registerLazySingleton(() => GetAddressesUseCase(sl()));
   sl.registerLazySingleton(() => SetDefaultAddressUseCase(sl()));
+  sl.registerLazySingleton(() => InitialpaymentUsecase(sl()));
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -154,4 +164,6 @@ Future<void> init() async {
       setDefaultAddressUseCase: sl(),
     ),
   );
+
+  sl.registerFactory(() => PaymentBloc(initialpaymentUsecase: sl()));
 }

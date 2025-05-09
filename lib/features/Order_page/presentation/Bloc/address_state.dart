@@ -17,3 +17,9 @@ class AddressError extends AddressState {
 
   AddressError(this.message);
 }
+
+class AddressSelectedState extends AddressState {
+  final AddressModel selectedAddress;
+
+  AddressSelectedState(this.selectedAddress);
+}

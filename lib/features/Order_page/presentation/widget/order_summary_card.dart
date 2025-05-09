@@ -4,7 +4,7 @@ import 'package:glitchxscndprjt/features/Order_page/Data/Models/address_model.da
 import 'package:glitchxscndprjt/features/Order_page/presentation/Pages/order_summary_page.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Pages/selectaddress_page.dart';
 
-class OrderSummaryCard extends StatelessWidget {
+class OrderSummaryCard extends StatefulWidget {
   const OrderSummaryCard({
     super.key,
     required this.screenWidth,
@@ -18,20 +18,32 @@ class OrderSummaryCard extends StatelessWidget {
   final double screenHeight;
   final OrderSummaryPage widget;
   final AddressModel? selectedAddress; // Address? type
-  final Function(AddressModel)
-  onAddressSelected; // Callback function to update the selected address
+  final Function(AddressModel) onAddressSelected;
+  @override
+  State<OrderSummaryCard> createState() => _OrderSummaryCardState();
+}
 
+class _OrderSummaryCardState extends State<OrderSummaryCard> {
+  // Callback function to update the selected address
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         // Delivery Info
         Container(
-          width: screenWidth,
-          height: screenHeight * 0.20,
+          width: widget.screenWidth,
+          height: widget.screenHeight * 0.20,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Colors.green,
+            color: const Color.fromARGB(188, 158, 12, 2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(64),
+                spreadRadius: 2,
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -51,9 +63,7 @@ class OrderSummaryCard extends StatelessWidget {
                       );
                       if (address != null) {
                         // Update the selected address when a new one is selected
-                        onAddressSelected(
-                          address,
-                        ); // Update the parent widget with the new address
+                        widget.onAddressSelected(address);
                       }
                     },
                     child: const Text("Change"),
@@ -66,8 +76,8 @@ class OrderSummaryCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
-                    selectedAddress != null
-                        ? "${selectedAddress?.name}, ${selectedAddress?.house}, ${selectedAddress?.area}, ${selectedAddress?.city}"
+                    widget.selectedAddress != null
+                        ? "${widget.selectedAddress?.name}, ${widget.selectedAddress?.house}, ${widget.selectedAddress?.area}, ${widget.selectedAddress?.city}"
                         : "Your saved address goes here...",
                     style: const TextStyle(color: Colors.white, fontSize: 14),
                   ),
@@ -79,7 +89,7 @@ class OrderSummaryCard extends StatelessWidget {
         const SizedBox(height: 10),
 
         // Cart Items List
-        ...widget.cartItems.map((items) {
+        ...widget.widget.cartItems.map((items) {
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             padding: const EdgeInsets.all(12),
@@ -103,8 +113,8 @@ class OrderSummaryCard extends StatelessWidget {
                       items.imageUrl.isNotEmpty
                           ? Image.network(
                             items.imageUrl,
-                            width: screenWidth * 0.28,
-                            height: screenHeight * 0.15,
+                            width: widget.screenWidth * 0.28,
+                            height: widget.screenHeight * 0.15,
                             fit: BoxFit.cover,
                             errorBuilder:
                                 (_, __, ___) => const Icon(
