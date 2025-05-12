@@ -1,15 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/address_model.dart';
-import 'package:glitchxscndprjt/features/Order_page/Data/Models/payment_model.dart';
-import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
-import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_event.dart';
+// import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
+// import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_state.dart';
+// import 'package:glitchxscndprjt/features/Order_page/presentation/Payment_failure_success.dart/order_failurepage.dart';
+// import 'package:glitchxscndprjt/features/Order_page/presentation/Payment_failure_success.dart/payment_reciptpage.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/widget/order_btn.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/widget/order_summary_card.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/widget/summary_row.dart';
 
 class OrderSummaryPage extends StatefulWidget {
   final List<CartModel> cartItems;
@@ -72,7 +72,6 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 ),
               ),
             ),
-            // Fixed Order Summary Footer
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -90,73 +89,24 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildSummaryRow(
+                  buildSummaryRow(
                     "Items (${widget.totalItems})",
                     "₹${_calculateSubtotal(widget.cartItems)}",
                   ),
                   const SizedBox(height: 8),
-                  _buildSummaryRow("Shipping Fee", "₹ ${widget.shippingFee}"),
+                  buildSummaryRow("Shipping Fee", "₹ ${widget.shippingFee}"),
                   const Divider(color: Colors.white24, thickness: 1),
                   const SizedBox(height: 8),
-                  _buildSummaryRow(
+                  buildSummaryRow(
                     "Grand Total",
                     "₹${widget.grandTotal.toStringAsFixed(2)}",
                     isBold: true,
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      final user = FirebaseAuth.instance.currentUser;
-                      print('${user?.phoneNumber}');
-                      print('${user?.email}');
-
-                      if (user == null || user.email == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "User data incomplete. Cannot proceed with payment.",
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-
-                      final paymentRequest = PaymentModel(
-                        amount: widget.grandTotal,
-                        name: "GlitchX",
-                        description: 'Order payment',
-                        // contact: user.phoneNumber ?? '',
-                        email: user.email!,
-                      );
-
-                      context.read<PaymentBloc>().add(
-                        StartPaymentEvent(paymentRequest),
-                      );
-                    },
-
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: EdgeInsets.symmetric(
-                        vertical: screenHeight * 0.018,
-                        horizontal: screenHeight * 0.030,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      elevation: 6,
-                    ),
-                    icon: const Icon(
-                      Icons.shopping_cart_checkout,
-                      color: Colors.white,
-                    ),
-                    label: Text(
-                      'Order Now',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.045,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                  order_btn(
+                    widget: widget,
+                    screenHeight: screenHeight,
+                    screenWidth: screenWidth,
                   ),
                 ],
               ),
@@ -167,30 +117,6 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
         screenWidth: screenWidth,
         alignment: Alignment.topCenter,
       ),
-    );
-  }
-
-  Widget _buildSummaryRow(String label, String value, {bool isBold = false}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            color: isBold ? Colors.white : Colors.white60,
-            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ],
     );
   }
 }

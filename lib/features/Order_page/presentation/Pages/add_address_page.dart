@@ -5,6 +5,7 @@ import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/address_model.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_bloc.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_event.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/widget/build_textrfield.dart';
 import 'package:uuid/uuid.dart';
 
 class AddAddressPage extends StatefulWidget {
@@ -79,25 +80,21 @@ class _AddAddressPageState extends State<AddAddressPage> {
               key: _formKey,
               child: ListView(
                 children: [
-                  _buildTextField(_nameController, 'Full Name', Icons.person),
-                  _buildTextField(
-                    _phoneController,
-                    'Phone Number',
-                    Icons.phone,
-                  ),
-                  _buildTextField(_pincodeController, 'Pincode', Icons.pin),
-                  _buildTextField(
+                  buildTextField(_nameController, 'Full Name', Icons.person),
+                  buildTextField(_phoneController, 'Phone Number', Icons.phone),
+                  buildTextField(_pincodeController, 'Pincode', Icons.pin),
+                  buildTextField(
                     _houseController,
                     'House No., Building Name',
                     Icons.house,
                   ),
-                  _buildTextField(
+                  buildTextField(
                     _areaController,
                     'Road Name, Area, Colony',
                     Icons.location_city,
                   ),
-                  _buildTextField(_cityController, 'City', Icons.location_on),
-                  _buildTextField(_stateController, 'State', Icons.map),
+                  buildTextField(_cityController, 'City', Icons.location_on),
+                  buildTextField(_stateController, 'State', Icons.map),
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: _submit,
@@ -125,40 +122,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
           screenWidth: screenWidth,
           alignment: Alignment.topCenter,
         ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-    TextEditingController controller,
-    String label,
-    IconData icon,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 18.0),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.deepPurpleAccent),
-          labelText: label,
-          labelStyle: const TextStyle(color: Colors.black),
-          filled: true,
-          fillColor: Colors.deepPurple[50],
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.deepPurpleAccent,
-              width: 2,
-            ),
-          ),
-        ),
-        style: const TextStyle(color: Colors.black87),
-        validator:
-            (value) => value == null || value.isEmpty ? 'Required' : null,
       ),
     );
   }

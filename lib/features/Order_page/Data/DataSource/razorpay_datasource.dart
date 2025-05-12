@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/payment_model.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_event.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayDatasource {
   final Razorpay _razorpay = Razorpay();
   PaymentModel? _latestRequest;
+  // final PaymentBloc bloc;
 
   RazorpayDatasource() {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -46,6 +49,12 @@ class RazorpayDatasource {
           // 'contact': _latestRequest!.contact,
           'email': _latestRequest!.email,
         });
+        // bloc.add(
+        //   PaymentSuccessEvent(
+        //     paymentId: response.paymentId!,
+        //     request: _latestRequest!,
+        //   ),
+        // );
       } catch (e) {
         print('Firebase write error: $e');
       }
@@ -54,6 +63,7 @@ class RazorpayDatasource {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print("Error : ${response.message}");
+    // bloc.add(PaymentFailureEvent(response.message ?? "Unknown error"));
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {

@@ -61,4 +61,18 @@ class ProductRemoteDatasource {
     if (!doc.exists) throw Exception("Product Not Found");
     return ProductModel.fromMap(doc.data()!, doc.id);
   }
+
+  Future<List<ProductModel>> searchProducts(String query) async {
+    final result =
+        await _firestore
+            .collection('products')
+            .orderBy('name')
+            .startAt([query])
+            .endAt(['$query\uf8ff'])
+            .get();
+
+    return result.docs
+        .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
+        .toList();
+  }
 }

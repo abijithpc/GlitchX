@@ -1,6 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_bloc.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_event.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_state.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/product_details_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -10,41 +16,22 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController _searchController = TextEditingController();
-  String searchQuery = "";
+  final TextEditingController _searchController = TextEditingController();
 
-  // Sample search results for categories or products
-  List<String> allItems = [
-    'Category 1',
-    'Category 2',
-    'Category 3',
-    'Product A',
-    'Product B',
-    'Product C',
-  ];
-
-  List<String> searchResults = [];
+  void _onSearchChanged(String query) {
+    context.read<ProductSearchBloc>().add(SearchProducts(query));
+  }
 
   @override
   void initState() {
     super.initState();
-    searchResults = allItems;
-  }
-
-  // Function to filter items based on search query
-  void _filterSearchResults(String query) {
-    setState(() {
-      searchQuery = query;
-      searchResults =
-          allItems
-              .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-              .toList();
-    });
+    context.read<ProductSearchBloc>().add(SearchProducts(''));
   }
 
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: const Text('Search'),
@@ -52,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
         trailing: GestureDetector(
           onTap: () {
             _searchController.clear();
-            _filterSearchResults('');
+            _onSearchChanged('');
           },
           child: Icon(CupertinoIcons.clear_circled, size: 28),
         ),
@@ -64,11 +51,10 @@ class _SearchPageState extends State<SearchPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                // Enhanced Search Bar (Styled like iOS)
                 CupertinoSearchTextField(
                   controller: _searchController,
                   placeholder: 'Search categories or products...',
-                  onChanged: _filterSearchResults,
+                  onChanged: _onSearchChanged,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
@@ -84,63 +70,108 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Search Results List with custom card style
                 Expanded(
-                  child:
-                      searchResults.isEmpty
-                          ? Center(
-                            child: Text(
-                              'No results found for "$searchQuery"',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: CupertinoColors.inactiveGray,
-                              ),
-                            ),
-                          )
-                          : ListView.builder(
-                            itemCount: searchResults.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  // Handle item tap (navigate to details or perform actions)
-                                },
-                                child: Card(
-                                  elevation: 5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  margin: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.tag_fill,
-                                          color: CupertinoColors.activeBlue,
+                  child: BlocBuilder<ProductSearchBloc, ProductSearchState>(
+                    builder: (context, state) {
+                      if (state is ProductSearchLoading) {
+                        return const Center(
+                          child: CupertinoActivityIndicator(),
+                        );
+                      } else if (state is ProductSearchLoaded) {
+                        final List<ProductModel> results = state.results;
+                        if (results.isEmpty) {
+                          return const Center(child: Text('No Results Found'));
+                        }
+
+                        return ListView.builder(
+                          itemCount: results.length,
+                          itemBuilder: (context, index) {
+                            final product = results[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder:
+                                        (_) => ProductDetailsPage(
+                                          productId: product.id!,
                                         ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Text(
-                                            searchResults[index],
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Icon(
-                                          CupertinoIcons.right_chevron,
-                                          color: CupertinoColors.systemGrey,
-                                        ),
-                                      ],
-                                    ),
                                   ),
+                                );
+                              },
+                              child: Card(
+                                elevation: 3,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                              );
-                            },
-                          ),
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        bottomLeft: Radius.circular(12),
+                                      ),
+                                      child: Image.network(
+                                        product.imageUrls.first,
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (_, __, ___) => const Icon(
+                                              CupertinoIcons.photo,
+                                            ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0,
+                                          vertical: 8.0,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              product.name,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              product.description,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
+                                      child: Icon(
+                                        CupertinoIcons.chevron_forward,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else if (state is ProductSearchError) {
+                        return Center(child: Text('Error: ${state.message}'));
+                      }
+
+                      return const SizedBox.shrink();
+                    },
+                  ),
                 ),
               ],
             ),

@@ -2,9 +2,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter",
+      "name": "glitchxscndprjt (Flutter I2011)",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "3084499986000G3"
     }
   ]
 }

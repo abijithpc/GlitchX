@@ -9,6 +9,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   PaymentBloc({required this.initialpaymentUsecase}) : super(PaymentInitial()) {
     // Using on() to handle events
     on<StartPaymentEvent>(_onStartPayment);
+    // on<PaymentSuccessEvent>(_onPaymentSuccess);
+    // on<PaymentFailureEvent>(_onPaymentFailure);
   }
 
   Future<void> _onStartPayment(
@@ -18,9 +20,23 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     emit(PaymentInProgress());
     try {
       await initialpaymentUsecase.call(event.paymentModel);
-      emit(PaymentSuccess());
+      emit(PaymentSuccess("Payment Completed Successfully"));
     } catch (e) {
-      emit(PaymentFailure());
+      emit(PaymentFailure(e.toString()));
     }
   }
+
+  // Future<void> _onPaymentSuccess(
+  //   PaymentSuccessEvent event,
+  //   Emitter<PaymentState> emit,
+  // ) async {
+  //   emit(PaymentSuccess(event.paymentId));
+  // }
+
+  // Future<void> _onPaymentFailure(
+  //   PaymentFailureEvent event,
+  //   Emitter<PaymentState> emit,
+  // ) async {
+  //   emit(PaymentFailure(event.message));
+  // }
 }

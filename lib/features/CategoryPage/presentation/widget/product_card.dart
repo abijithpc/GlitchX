@@ -70,7 +70,6 @@ class ProductCard extends StatelessWidget {
                         width: double.infinity,
                         errorBuilder: (context, error, stackTrace) {
                           // Log the error for debugging
-                          print('Error loading image: $error');
                           return const Center(
                             child: Icon(Icons.broken_image),
                           ); // Show a broken image icon
@@ -78,15 +77,10 @@ class ProductCard extends StatelessWidget {
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
                             // Image has finished loading
-                            print(
-                              'Image loaded successfully: ${product.imageUrls.isNotEmpty ? product.imageUrls[0] : 'No Image'}',
-                            );
+
                             return child;
                           } else {
                             // Image is still loading
-                            print(
-                              'Loading image: ${product.imageUrls.isNotEmpty ? product.imageUrls[0] : 'No Image'}',
-                            );
                             return Center(
                               child: CircularProgressIndicator(
                                 value:

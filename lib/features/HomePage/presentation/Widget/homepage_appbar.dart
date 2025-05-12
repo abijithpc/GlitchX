@@ -20,20 +20,20 @@ AppBar HomePage_AppBar(String locationText) {
               Row(
                 children: [
                   Icon(Icons.location_on, color: Colors.red),
-                  Text(
-                    "Selected Location",
-                    style: TextStyle(color: Colors.white),
+                  // Text(
+                  //   "Selected Location",
+                  //   style: TextStyle(color: Colors.white),
+                  // ),
+                  SizedBox(
+                    width: 120.0,
+                    child: Text(
+                      locationText,
+                      style: TextStyle(color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
                 ],
-              ),
-              SizedBox(
-                width: 120.0,
-                child: Text(
-                  locationText,
-                  style: TextStyle(color: Colors.white),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
               ),
             ],
           ),

@@ -7,3 +7,15 @@ class StartPaymentEvent extends PaymentEvent {
 
   StartPaymentEvent(this.paymentModel);
 }
+
+class PaymentSuccessEvent extends PaymentEvent {
+  final String paymentId;
+  final PaymentModel request;
+  PaymentSuccessEvent({required this.paymentId, required this.request});
+}
+
+class PaymentFailureEvent extends PaymentEvent {
+  final String message;
+
+  PaymentFailureEvent(this.message);
+}

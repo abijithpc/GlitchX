@@ -61,6 +61,7 @@ dependencies:
   uuid: ^4.5.1
   razorpay_flutter: ^1.4.0
   intl: ^0.20.2
+  confetti: ^0.8.0
 
 dev_dependencies:
   flutter_test:

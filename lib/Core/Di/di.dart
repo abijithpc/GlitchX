@@ -28,7 +28,9 @@ import 'package:glitchxscndprjt/features/CategoryPage/Data/Repository/product_re
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Repository/product_repository.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproduct_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproductid_usecase.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/search_products_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/DataSource/user_category_remotedatasource.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/Repository/user_category_repositoryimpl.dart';
 import 'package:glitchxscndprjt/features/HomePage/Domain/Repository/user_categoryrepository.dart';
@@ -125,6 +127,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAddressesUseCase(sl()));
   sl.registerLazySingleton(() => SetDefaultAddressUseCase(sl()));
   sl.registerLazySingleton(() => InitialpaymentUsecase(sl()));
+  sl.registerLazySingleton(() => SearchProductsUsecase(sl()));
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -166,4 +169,5 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => PaymentBloc(initialpaymentUsecase: sl()));
+  sl.registerFactory(() => ProductSearchBloc(sl()));
 }
