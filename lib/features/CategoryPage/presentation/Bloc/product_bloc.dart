@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/get_newlyreleased_gameusecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproduct_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproductid_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_event.dart';
@@ -8,9 +9,13 @@ import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final GetproductUsecase getproductUsecase;
   final GetproductidUsecase getproductidUsecase;
+  final GetNewlyreleasedGameusecase getNewlyreleasedGame;
 
-  ProductBloc(this.getproductUsecase, this.getproductidUsecase)
-    : super(ProductInitial()) {
+  ProductBloc(
+    this.getproductUsecase,
+    this.getproductidUsecase,
+    this.getNewlyreleasedGame,
+  ) : super(ProductInitial()) {
     on<LoadProductByCategoryEvent>((event, emit) async {
       emit(ProductLoading());
       try {
@@ -90,6 +95,18 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         );
       } catch (e) {
         emit(ProductError('Failed to load products'));
+      }
+    });
+
+    on<FetchNewlyReleasedGame>((event, emit) async {
+      emit(ProductLoading());
+      try {
+        final games = await getNewlyreleasedGame();
+        emit(ProductLoaded(games));
+      } catch (e) {
+        emit(
+          ProductError("Failed to load newly released Games : ${e.toString()}"),
+        );
       }
     });
   }

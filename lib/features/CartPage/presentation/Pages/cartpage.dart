@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
-import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_state.dart';
@@ -67,7 +66,7 @@ class _CartPageState extends State<CartPage> {
               (sum, item) => sum + item.quantity,
             );
 
-            final double shippingFee = subtotal < 100 ? 99.0 : 0.0;
+            final double shippingFee = subtotal < 1000 ? 99.0 : 0.0;
 
             final double grandTotal = subtotal + shippingFee;
 

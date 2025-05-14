@@ -75,4 +75,19 @@ class ProductRemoteDatasource {
         .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
         .toList();
   }
+
+  Future<List<ProductModel>> getNewlyReleasedGames() async {
+    final now = DateTime.now();
+    final querysnapshot =
+        await _firestore
+            .collection('products')
+            .where('releaseDate', isLessThanOrEqualTo: now)
+            .orderBy('releaseDate', descending: true)
+            .limit(10)
+            .get();
+
+    return querysnapshot.docs
+        .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
+        .toList();
+  }
 }

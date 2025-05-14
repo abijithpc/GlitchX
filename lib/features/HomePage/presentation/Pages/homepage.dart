@@ -44,7 +44,7 @@ class Homepage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: HomePage_AppBar(location, ),
+      appBar: HomePage_AppBar(location),
       body: ScreenBackGround(
         alignment: Alignment.topCenter,
         screenHeight: screenHeight,
@@ -55,6 +55,7 @@ class Homepage extends StatelessWidget {
             bottom: screenHeight * 0.02,
           ),
           child: GreetingCard(
+            screenHeight: screenHeight,
             screenWidth: screenWidth,
             userPic: userPic,
             greetingMessage: greetingMessage,

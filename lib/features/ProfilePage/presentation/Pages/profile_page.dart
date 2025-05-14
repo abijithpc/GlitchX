@@ -68,6 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             context: context,
                             builder:
                                 (context) => CupertinoAlertDialog(
+                                  insetAnimationCurve: Curves.fastOutSlowIn,
                                   title: Text("Sign Out"),
                                   content: Text(
                                     "Are you sure you want to sign out? ",

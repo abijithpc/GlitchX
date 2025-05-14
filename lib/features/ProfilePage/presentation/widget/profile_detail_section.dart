@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartpage.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/presentation/Pages/wishlist_page.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/edit_profile.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_detailspage.dart';
@@ -93,9 +96,27 @@ class ProfileDetailsSection extends StatelessWidget {
         ProfileTile(
           icon: Icons.shopping_cart,
           title: "Cart Page",
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CartPage()),
+            );
+          },
         ),
-        ProfileTile(icon: Icons.favorite, title: "Favourites", onTap: () {}),
+        ProfileTile(
+          icon: Icons.favorite,
+          title: "Favourites",
+          onTap: () {
+            Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(
+                builder:
+                    (context) => WishlistPage(
+                      userId: FirebaseAuth.instance.currentUser!.uid,
+                    ),
+              ),
+            );
+          },
+        ),
         ProfileTile(icon: Icons.list_alt, title: "Orders", onTap: () {}),
         ProfileTile(
           icon: Icons.privacy_tip_outlined,

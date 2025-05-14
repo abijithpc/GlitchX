@@ -94,7 +94,10 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                     "₹${_calculateSubtotal(widget.cartItems)}",
                   ),
                   const SizedBox(height: 8),
-                  buildSummaryRow("Shipping Fee", "₹ ${widget.shippingFee}"),
+                  buildSummaryRow(
+                    "Shipping Fee",
+                    "₹ ${widget.shippingFee == 0 ? 'Free' : widget.shippingFee}",
+                  ),
                   const Divider(color: Colors.white24, thickness: 1),
                   const SizedBox(height: 8),
                   buildSummaryRow(

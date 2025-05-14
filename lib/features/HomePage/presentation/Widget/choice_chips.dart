@@ -1,21 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/category_page.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/product_list_page.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/categories_state.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_event.dart';
 
-class CatergoryChoiceChips extends StatefulWidget {
-  const CatergoryChoiceChips({super.key});
+class RotatingCategorySelectorListWheel extends StatefulWidget {
+  const RotatingCategorySelectorListWheel({super.key});
 
   @override
-  _CatergoryChoiceChipsState createState() => _CatergoryChoiceChipsState();
+  State<RotatingCategorySelectorListWheel> createState() =>
+      _RotatingCategorySelectorListWheelState();
 }
 
-class _CatergoryChoiceChipsState extends State<CatergoryChoiceChips> {
-  String? selectedCategoryId;
+class _RotatingCategorySelectorListWheelState
+    extends State<RotatingCategorySelectorListWheel> {
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -25,141 +27,93 @@ class _CatergoryChoiceChipsState extends State<CatergoryChoiceChips> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        BlocBuilder<UserCategoryBloc, UserCategoryState>(
-          builder: (context, state) {
-            if (state is UserCategoryLoading) {
-              return const Center(
-                child: CupertinoActivityIndicator(radius: 20),
-              );
-            } else if (state is UserCategoryLoaded) {
-              final categories = state.categories;
-              if (categories.isEmpty) {
-                return const Text(
-                  'No Categories Available',
-                  style: TextStyle(color: Colors.red),
-                );
-              }
+    return BlocBuilder<UserCategoryBloc, UserCategoryState>(
+      builder: (context, state) {
+        if (state is UserCategoryLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is UserCategoryLoaded) {
+          final categories = state.categories;
+          if (categories.isEmpty) {
+            return const Center(
+              child: Text(
+                'No categories available',
+                style: TextStyle(color: Colors.red),
+              ),
+            );
+          }
 
-              return Row(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: List.generate(
-                          categories.length > 5 ? 5 : categories.length,
-                          (index) {
-                            final category = categories[index];
-                            final isSelected =
-                                selectedCategoryId == category.id;
+          return Column(
+            children: [
+              SizedBox(
+                height: 200,
+                child: ListWheelScrollView.useDelegate(
+                  itemExtent: 60,
+                  perspective: 0.003,
+                  diameterRatio: 2.0,
+                  physics: const FixedExtentScrollPhysics(),
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    builder: (context, index) {
+                      if (index < 0 || index >= categories.length) return null;
+                      final category = categories[index];
+                      final isSelected = index == _selectedIndex;
 
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6.0,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) =>
+                                      ProductListPage(category: category.name),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: isSelected ? 6 : 2,
+                          color:
+                              isSelected
+                                  ? Colors.deepPurpleAccent
+                                  : Colors.black87,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Center(
+                            child: Text(
+                              category.name,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: isSelected ? 18 : 14,
+                                fontWeight:
+                                    isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
                               ),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    selectedCategoryId = category.id;
-                                  });
-
-                                  // Navigate to Product List Page
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => ProductListPage(
-                                            category:
-                                                category
-                                                    .name, // Pass category name
-                                          ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10,
-                                    horizontal: isSelected ? 16 : 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    gradient:
-                                        isSelected
-                                            ? const LinearGradient(
-                                              colors: [
-                                                Color(0xFF6D0EB5),
-                                                Color(0xFF4059F1),
-                                              ],
-                                            )
-                                            : const LinearGradient(
-                                              colors: [
-                                                Color(0xFFE0E0E0),
-                                                Color(0xFFFAFAFA),
-                                              ],
-                                            ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.05),
-                                        blurRadius: 4,
-                                        offset: const Offset(1, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Text(
-                                    category.name,
-                                    style: TextStyle(
-                                      fontSize: isSelected ? 14 : 12,
-                                      color:
-                                          isSelected
-                                              ? Colors.white
-                                              : Colors.black87,
-                                      fontWeight:
-                                          isSelected
-                                              ? FontWeight.w600
-                                              : FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                  const ChoiceChipsArrow(),
-                ],
-              );
-            } else if (state is UserCategoryError) {
-              return Text(state.message);
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
-}
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          );
+        } else if (state is UserCategoryError) {
+          return Center(
+            child: Text(
+              state.message,
+              style: const TextStyle(color: Colors.red),
+            ),
+          );
+        }
 
-class ChoiceChipsArrow extends StatelessWidget {
-  const ChoiceChipsArrow({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      style: ButtonStyle(
-        iconColor: WidgetStateProperty.all<Color?>(Colors.white),
-      ),
-      icon: const Icon(Icons.arrow_forward_ios),
-      onPressed: () {
-        Navigator.of(
-          context,
-          rootNavigator: true,
-        ).push(MaterialPageRoute(builder: (context) => CategoryPage()));
+        return const SizedBox.shrink();
       },
     );
   }

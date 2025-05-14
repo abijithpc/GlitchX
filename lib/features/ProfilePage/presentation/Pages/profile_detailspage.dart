@@ -106,6 +106,11 @@ class _ProfileDetailspageState extends State<ProfileDetailspage>
                         value: user.id,
                         icon: Icons.badge,
                       ),
+                      ProfileField(
+                        title: "Location",
+                        value: user.location!,
+                        icon: Icons.badge,
+                      ),
                       const SizedBox(height: 20),
                     ],
                   ),

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 Widget buildTextField(
   TextEditingController controller,
   String label,
-  IconData icon,
-) {
+  IconData icon, {
+  FormFieldValidator<String>? validator,
+}) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 18.0),
     child: TextFormField(
@@ -28,8 +29,11 @@ Widget buildTextField(
           ),
         ),
       ),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       style: const TextStyle(color: Colors.black87),
-      validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+      validator:
+          validator ??
+          (value) => value == null || value.isEmpty ? 'Required' : null,
     ),
   );
 }

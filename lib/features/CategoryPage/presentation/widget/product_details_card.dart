@@ -5,7 +5,7 @@ import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
-import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartPage.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartpage.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';

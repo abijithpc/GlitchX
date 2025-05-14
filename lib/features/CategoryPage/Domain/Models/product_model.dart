@@ -104,4 +104,20 @@ class ProductModel {
       rating: rating ?? this.rating,
     );
   }
+
+  ProductModel toEntity() {
+    return ProductModel(
+      name: name,
+      description: description,
+      category: category,
+      diskCount: diskCount,
+      price: price,
+      stock: stock,
+      minSpecs: minSpecs,
+      recSpecs: recSpecs,
+      releaseDate: releaseDate,
+      imageUrls: imageUrls,
+      rating: rating,
+    );
+  }
 }

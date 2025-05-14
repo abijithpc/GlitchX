@@ -106,6 +106,15 @@ class CartPageCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
+                Text(
+                  item.category,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.040,
+                    color: Colors.grey,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // const SizedBox(height: 4),
                 Row(
                   children: [
                     Text(

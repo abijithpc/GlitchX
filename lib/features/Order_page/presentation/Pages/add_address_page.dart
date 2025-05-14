@@ -68,10 +68,14 @@ class _AddAddressPageState extends State<AddAddressPage> {
         appBar: AppBar(
           title: const Text(
             'Add Address',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           centerTitle: true,
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.black,
         ),
         body: ScreenBackGround(
           widget: Padding(
@@ -80,40 +84,106 @@ class _AddAddressPageState extends State<AddAddressPage> {
               key: _formKey,
               child: ListView(
                 children: [
-                  buildTextField(_nameController, 'Full Name', Icons.person),
-                  buildTextField(_phoneController, 'Phone Number', Icons.phone),
-                  buildTextField(_pincodeController, 'Pincode', Icons.pin),
+                  buildTextField(
+                    _nameController,
+                    'Full Name',
+                    Icons.person,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Name is required';
+                      }
+
+                      // Check if it contains only letters and single spaces (e.g., "John Doe")
+                      if (!RegExp(
+                        r"^[A-Za-z]+(\s[A-Za-z]+)*$",
+                      ).hasMatch(value.trim())) {
+                        return 'Enter a valid name without numbers or special characters';
+                      }
+
+                      return null;
+                    },
+                  ),
+
+                  buildTextField(
+                    _phoneController,
+                    'Phone Number',
+                    Icons.phone,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Phone number is required';
+                      }
+                      if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                        return 'Enter a valid 10-digit phone number';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  buildTextField(
+                    _pincodeController,
+                    'Pincode',
+                    Icons.pin,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Pincode is required';
+                      }
+                      if (!RegExp(r'^\d{6}$').hasMatch(value)) {
+                        return 'Enter a valid 6-digit pincode';
+                      }
+                      return null;
+                    },
+                  ),
+
                   buildTextField(
                     _houseController,
                     'House No., Building Name',
                     Icons.house,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'House details are required';
+                      }
+                      return null;
+                    },
                   ),
+
                   buildTextField(
                     _areaController,
                     'Road Name, Area, Colony',
                     Icons.location_city,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Area details are required';
+                      }
+                      return null;
+                    },
                   ),
-                  buildTextField(_cityController, 'City', Icons.location_on),
-                  buildTextField(_stateController, 'State', Icons.map),
+
+                  buildTextField(
+                    _cityController,
+                    'City',
+                    Icons.location_on,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'City is required';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  buildTextField(
+                    _stateController,
+                    'State',
+                    Icons.map,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'State is required';
+                      }
+                      return null;
+                    },
+                  ),
+
                   const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurpleAccent, // Button color
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 5,
-                    ),
-                    child: const Text(
-                      'Save Address',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  SaveAddressBtn(),
                 ],
               ),
             ),
@@ -122,6 +192,22 @@ class _AddAddressPageState extends State<AddAddressPage> {
           screenWidth: screenWidth,
           alignment: Alignment.topCenter,
         ),
+      ),
+    );
+  }
+
+  ElevatedButton SaveAddressBtn() {
+    return ElevatedButton(
+      onPressed: _submit,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.deepPurpleAccent, // Button color
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 5,
+      ),
+      child: const Text(
+        'Save Address',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartPage.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartpage.dart';
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Pages/homepage.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_page.dart';

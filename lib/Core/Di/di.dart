@@ -26,11 +26,19 @@ import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.da
 import 'package:glitchxscndprjt/features/CategoryPage/Data/DataSource/product_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Data/Repository/product_repo_impl.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Repository/product_repository.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/get_newlyreleased_gameusecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproduct_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproductid_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/search_products_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_bloc.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/Data/DataSource/wishlist_remotedatasource.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/Data/Repository/wishlist_reposiotryimpl.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/Domain/Repository/wishlist_reposiotry.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/Domain/UseCase/addtowishlist_usecase.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/Domain/UseCase/deletewishlist_usecase.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/Domain/UseCase/getwishlist_usecase.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/presentation/Bloc/wishlist_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/DataSource/user_category_remotedatasource.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/Repository/user_category_repositoryimpl.dart';
 import 'package:glitchxscndprjt/features/HomePage/Domain/Repository/user_categoryrepository.dart';
@@ -84,6 +92,9 @@ Future<void> init() async {
     () => AddressRemotedatasource(sl(), sl()),
   );
   sl.registerLazySingleton<RazorpayDatasource>(() => RazorpayDatasource());
+  sl.registerLazySingleton<WishlistRemotedatasource>(
+    () => WishlistRemotedatasource(sl()),
+  );
 
   // 📦 Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -105,6 +116,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<PaymentRepository>(
     () => PaymentRepositoryimpl(sl()),
+  );
+  sl.registerLazySingleton<WishlistReposiotry>(
+    () => WishlistReposiotryimpl(sl()),
   );
 
   // ✅ UseCases
@@ -128,6 +142,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SetDefaultAddressUseCase(sl()));
   sl.registerLazySingleton(() => InitialpaymentUsecase(sl()));
   sl.registerLazySingleton(() => SearchProductsUsecase(sl()));
+  sl.registerLazySingleton(() => GetNewlyreleasedGameusecase(sl()));
+  sl.registerLazySingleton(() => AddtowishlistUsecase(sl()));
+  sl.registerLazySingleton(() => GetWishlistUsecase(sl()));
+  sl.registerLazySingleton(() => DeleteFromWishlistUsecase(sl()));
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -150,7 +168,7 @@ Future<void> init() async {
     ),
   );
   sl.registerFactory(() => UserCategoryBloc(sl()));
-  sl.registerFactory(() => ProductBloc(sl(), sl()));
+  sl.registerFactory(() => ProductBloc(sl(), sl(), sl()));
 
   sl.registerFactory(
     () => CartBloc(
@@ -170,4 +188,5 @@ Future<void> init() async {
 
   sl.registerFactory(() => PaymentBloc(initialpaymentUsecase: sl()));
   sl.registerFactory(() => ProductSearchBloc(sl()));
+  sl.registerFactory(() => WishlistBloc(sl(), sl(), sl()));
 }

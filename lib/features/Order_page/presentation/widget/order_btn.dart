@@ -25,7 +25,7 @@ class order_btn extends StatelessWidget {
         final user = FirebaseAuth.instance.currentUser;
         print('${user?.phoneNumber}');
         print('${user?.email}');
-    
+
         if (user == null || user.email == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -36,7 +36,7 @@ class order_btn extends StatelessWidget {
           );
           return;
         }
-    
+
         final paymentRequest = PaymentModel(
           amount: widget.grandTotal,
           name: "GlitchX",
@@ -44,27 +44,20 @@ class order_btn extends StatelessWidget {
           // contact: user.phoneNumber ?? '',
           email: user.email!,
         );
-    
-        context.read<PaymentBloc>().add(
-          StartPaymentEvent(paymentRequest),
-        );
+
+        context.read<PaymentBloc>().add(StartPaymentEvent(paymentRequest));
       },
-    
+
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
         padding: EdgeInsets.symmetric(
           vertical: screenHeight * 0.018,
           horizontal: screenHeight * 0.030,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         elevation: 6,
       ),
-      icon: const Icon(
-        Icons.shopping_cart_checkout,
-        color: Colors.white,
-      ),
+      icon: const Icon(Icons.shopping_cart_checkout, color: Colors.white),
       label: Text(
         'Order Now',
         style: TextStyle(

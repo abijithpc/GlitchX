@@ -21,4 +21,10 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<List<ProductModel>> searchProducts(String query) {
     return remotedatasource.searchProducts(query);
   }
+
+  @override
+  Future<List<ProductModel>> getNewlyReleasedGames() async {
+    final models = await remotedatasource.getNewlyReleasedGames();
+    return models.map((e) => e.toEntity()).toList();
+  }
 }

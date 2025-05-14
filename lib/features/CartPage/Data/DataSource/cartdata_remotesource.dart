@@ -25,7 +25,6 @@ class CartRemoteDataSource {
       throw Exception('Failed to add product to cart: $e');
     }
   }
-
   Future<List<CartModel>> fetchCartItems(String userId) async {
     try {
       final docSnapshot = await firestore.collection('cart').doc(userId).get();

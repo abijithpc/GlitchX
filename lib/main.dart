@@ -5,6 +5,7 @@ import 'package:glitchxscndprjt/features/Auth/presentation/Pages/reset_password.
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_bloc.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/presentation/Bloc/wishlist_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/bottomnavigation_bar.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<AddressBloc>()),
         BlocProvider(create: (context) => di.sl<PaymentBloc>()),
         BlocProvider(create: (context) => di.sl<ProductSearchBloc>()),
+        BlocProvider(create: (context) => di.sl<WishlistBloc>()),
       ],
       child: Builder(
         builder:

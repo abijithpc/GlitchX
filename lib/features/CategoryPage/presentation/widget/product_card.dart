@@ -4,10 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
-import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartPage.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartpage.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/product_details_page.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/showquantity_dialog.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/Data/Models/favourite_model.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/presentation/Bloc/wishlist_bloc.dart';
+import 'package:glitchxscndprjt/features/FavouritePage/presentation/Bloc/wishlist_event.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.products});
@@ -29,9 +32,7 @@ class ProductCard extends StatelessWidget {
       ),
       itemCount: products.length,
       itemBuilder: (_, index) {
-        print('Loaded ${products.length} products');
         final product = products[index];
-        print('Image URL: ${product.imageUrls}');
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -137,7 +138,29 @@ class ProductCard extends StatelessWidget {
                               Icons.favorite_border,
                               color: Colors.red,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              final user = FirebaseAuth.instance.currentUser;
+                              if (user == null) return;
+
+                              final favouriteModel = FavouriteModel(
+                                userId: user.uid,
+                                productId: product.id!,
+                                name: product.name,
+                                price: product.price,
+                                imageUrl: product.imageUrls.first,
+                                category: product.category,
+                              );
+                              context.read<WishlistBloc>().add(
+                                AddProductToWishList(favouriteModel),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Added to Wishlist"),
+                                  duration: Duration(seconds: 5),
+                                  backgroundColor: Colors.grey,
+                                ),
+                              );
+                            },
                             tooltip: "Add to Wishlist",
                             visualDensity: VisualDensity.compact,
                             iconSize: 20,

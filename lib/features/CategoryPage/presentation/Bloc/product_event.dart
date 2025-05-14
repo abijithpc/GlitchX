@@ -38,3 +38,5 @@ class SortAndFIlterProducts extends ProductEvent {
     rating,
   ];
 }
+
+class FetchNewlyReleasedGame extends ProductEvent {}

@@ -79,7 +79,7 @@ void showQuantityDialog(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => Navigator.of(context).pop(context),
                       child: Text(
                         "Cancel",
                         style: TextStyle(

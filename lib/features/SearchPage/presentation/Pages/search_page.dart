@@ -32,19 +32,13 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
 
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Search'),
-        backgroundColor: CupertinoColors.systemGrey6,
-        trailing: GestureDetector(
-          onTap: () {
-            _searchController.clear();
-            _onSearchChanged('');
-          },
-          child: Icon(CupertinoIcons.clear_circled, size: 28),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Search", style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: Colors.black,
       ),
-      child: ScreenBackGround(
+      body: ScreenBackGround(
         alignment: Alignment.center,
         widget: SafeArea(
           child: Padding(
@@ -89,8 +83,7 @@ class _SearchPageState extends State<SearchPage> {
                             final product = results[index];
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
+                                Navigator.of(context, rootNavigator: true).push(
                                   CupertinoPageRoute(
                                     builder:
                                         (_) => ProductDetailsPage(
