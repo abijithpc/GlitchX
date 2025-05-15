@@ -32,14 +32,23 @@ class AddressRemotedatasource {
         .toList();
   }
 
-  Future<void> deleteAddress(String docId) async {
-    final uid = _auth.currentUser!.uid;
-    await _firebaseFirestore
-        .collection('users')
-        .doc(uid)
-        .collection('addresses')
-        .doc(docId)
-        .delete();
+  Future<void> deleteAddress(String addressId) async {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) throw Exception("User not logged in");
+
+    try {
+      await _firebaseFirestore
+          .collection("users")
+          .doc(uid)
+          .collection("address")
+          .doc(addressId)
+          .delete();
+
+      print("Address $addressId deleted from Firestore");
+    } catch (e) {
+      print("Failed to delete address: $e");
+      rethrow;
+    }
   }
 
   Future<void> setDefaultAddress(String addressId) async {

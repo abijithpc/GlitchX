@@ -1,6 +1,14 @@
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:glitchxscndprjt/features/HomePage/Data/DataSource/igdn_remote_datasource.dart';
+import 'package:glitchxscndprjt/features/HomePage/Data/Igdb_Auth/igdb_auth.dart';
+import 'package:glitchxscndprjt/features/HomePage/Data/Repository/igdb_repositoryimpl.dart';
+import 'package:glitchxscndprjt/features/HomePage/Domain/Repository/igdb_repository.dart';
+import 'package:glitchxscndprjt/features/HomePage/Domain/UseCase/getupcomingtrailer_usecase.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/Igdb/igdb_bloc.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/delete_address_usecase.dart';
+import 'package:http/http.dart' as http;
 
 // Data Layer
 import 'package:glitchxscndprjt/features/Auth/Data/DataSource/firebase_auth_remote_datasource.dart';
@@ -57,21 +65,36 @@ import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/setdefaultadd
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_bloc.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/DataSource/profile_remote_datasource.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/Data/DataSource/theme_remotedatasource.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Repository/profile_repository_imp.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/Data/Repository/theme_reposiotryimpl.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/Repository/profile_auth_repository.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/Domain/Repository/theme_repository.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/get_theme_usecase.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/getprofile_usecase.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/settheme_usecase.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/updateprofileimage_usecase.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/UseCase/updateuserprofileusecase.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/Theme/theme_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  final auth = TwitchAuthService(
+    clientId: 'y9u368dpjt2xfqrublireqhsr9vh0i',
+    clientSecret: 'l6ltmivs9z7us5tbwh69lwhlrgka66',
+  );
+  final token = await auth.getAccessToken();
+
   // 🔥 Firebase core dependencies
   sl.registerLazySingleton(() => GoogleSignIn());
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
+
+  // Register HTTP client (used for IGDB REST calls)
+  sl.registerLazySingleton(() => http.Client());
 
   // 🌐 Data Source
   sl.registerLazySingleton<FirebaseAuthRemoteDataSource>(
@@ -94,6 +117,15 @@ Future<void> init() async {
   sl.registerLazySingleton<RazorpayDatasource>(() => RazorpayDatasource());
   sl.registerLazySingleton<WishlistRemotedatasource>(
     () => WishlistRemotedatasource(sl()),
+  );
+  sl.registerLazySingleton<ThemeRemoteDataSourceImpl>(
+    () => ThemeRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<IgdbRemoteDatasource>(
+    () => IgdbRemoteDatasource(
+      clientId: 'y9u368dpjt2xfqrublireqhsr9vh0i',
+      accessToken: token!,
+    ),
   );
 
   // 📦 Repository
@@ -120,6 +152,8 @@ Future<void> init() async {
   sl.registerLazySingleton<WishlistReposiotry>(
     () => WishlistReposiotryimpl(sl()),
   );
+  sl.registerLazySingleton<ThemeRepository>(() => ThemeReposiotryimpl(sl()));
+  sl.registerLazySingleton<IgdbRepository>(() => IgdbRepositoryimpl(sl()));
 
   // ✅ UseCases
   sl.registerLazySingleton(() => SignupUsecase(sl()));
@@ -139,6 +173,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => RemoveproductcartUsecase(sl()));
   sl.registerLazySingleton(() => AddaddressUsecase(sl()));
   sl.registerLazySingleton(() => GetAddressesUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteAddressUseCase(sl()),);
   sl.registerLazySingleton(() => SetDefaultAddressUseCase(sl()));
   sl.registerLazySingleton(() => InitialpaymentUsecase(sl()));
   sl.registerLazySingleton(() => SearchProductsUsecase(sl()));
@@ -146,6 +181,9 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AddtowishlistUsecase(sl()));
   sl.registerLazySingleton(() => GetWishlistUsecase(sl()));
   sl.registerLazySingleton(() => DeleteFromWishlistUsecase(sl()));
+  sl.registerLazySingleton(() => GetThemeUsecase(sl()));
+  sl.registerLazySingleton(() => SetThemeUsecase(sl()));
+  sl.registerLazySingleton(() => GetupcomingtrailerUsecase(sl()),);
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -183,10 +221,13 @@ Future<void> init() async {
       addAddressUseCase: sl(),
       getAddressesUseCase: sl(),
       setDefaultAddressUseCase: sl(),
+      deleteAddressUseCase: sl()
     ),
   );
 
   sl.registerFactory(() => PaymentBloc(initialpaymentUsecase: sl()));
   sl.registerFactory(() => ProductSearchBloc(sl()));
   sl.registerFactory(() => WishlistBloc(sl(), sl(), sl()));
+  sl.registerFactory(() => ThemeBloc(sl(), sl()));
+  sl.registerFactory(() => IgdbBloc(sl()),);
 }

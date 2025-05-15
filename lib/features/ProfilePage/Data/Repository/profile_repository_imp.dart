@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:latlong2/latlong.dart' as latLng;
 import 'package:glitchxscndprjt/features/ProfilePage/Data/DataSource/profile_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Domain/Repository/profile_auth_repository.dart';

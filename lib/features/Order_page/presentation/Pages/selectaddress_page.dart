@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
+import 'package:glitchxscndprjt/Core/show_delete_dialog.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_bloc.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_event.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_state.dart';
@@ -112,25 +113,34 @@ class _AddressPageState extends State<AddressPage> {
                                 "${address.house}, ${address.area}, ${address.city}",
                                 style: const TextStyle(fontSize: 14),
                               ),
-                              trailing:
-                                  selectedAddressId == address.id
-                                      ? const Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                      )
-                                      : const Icon(
-                                        Icons.radio_button_unchecked,
-                                        color: Colors.blueAccent,
-                                      ),
-                              onTap: () {
-                                setState(() {
-                                  selectedAddressId = address.id;
-                                });
-                                context.read<AddressBloc>().add(
-                                  SelectAddress(address.id),
-                                );
-                                Navigator.pop(context, address);
-                              },
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed:
+                                        () => showAddressDeleteDialog(
+                                          context,
+                                          address,
+                                        ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.check_circle,
+                                      color: Colors.green,
+                                    ),
+                                    onPressed: () {
+                                      context.read<AddressBloc>().add(
+                                        SelectAddress(address.id),
+                                      );
+                                      Navigator.pop(context, address);
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

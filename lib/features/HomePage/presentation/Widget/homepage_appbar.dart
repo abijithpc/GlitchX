@@ -20,10 +20,6 @@ AppBar HomePage_AppBar(String locationText) {
               Row(
                 children: [
                   Icon(Icons.location_on, color: Colors.red),
-                  // Text(
-                  //   "Selected Location",
-                  //   style: TextStyle(color: Colors.white),
-                  // ),
                   SizedBox(
                     width: 120.0,
                     child: Text(

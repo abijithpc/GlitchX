@@ -20,14 +20,15 @@ class ScreenBackGround extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          stops: [0.1, 0.5, 0.9], // Define stops to create smooth transitions
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
           colors: [
-            const Color(0xFF404040), // Dark Ash
-            const Color(0xFF2C2C2C), // Coal
-            const Color(0xFF101010), // Very Dark Gray
+            Color(0xFF1B1B2F), // Deep Obsidian
+            Color(0xFF1F4068), // Mystic Blue
+            Color(0xFF5BC0BE), // Chill Mist
+            Color(0xFF3A4750), // Gray Smoke
           ],
+          // stops: [0.1, 0.2, 0.4, 0.6],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         ),
       ),
       child: Align(
@@ -40,6 +41,39 @@ class ScreenBackGround extends StatelessWidget {
     );
   }
 }
-          // const Color(0xFF2E2E2E), // Charcoal
-          //   const Color(0xFF1C1C1C), // Very Dark Gray
-          //   const Color(0xFF000000), // Black
+      //  colors: [
+      //       Color(0xFF00FFFF), 
+      //       Color(0xFF008080), 
+      //       Color(0xFF000000), 
+      //     ],
+      //     stops: [0.0, 0.7, 1.0],
+      //     begin: Alignment.topLeft,
+      //     end: Alignment.bottomRight,
+
+        // colors: [
+        //     Color(0xFF090A0F), // Blackened Space
+        //     Color(0xFF1D2B53), // Pixel Navy
+        //     Color(0xFF6C5CE7), // Arcane Violet
+        //     Color(0xFF00CED1), // Synthetic Cyan
+        //   ],
+        //   begin: Alignment.topRight,
+        //   end: Alignment.bottomLeft,
+        // ),
+
+        //  colors: [
+        //     Color(0xFF0E0B16), // Abyssal Black
+        //     Color(0xFF4717F6), // Toxic Purple
+        //     Color(0xFF8F00FF), // Neural Violet
+        //     Color(0xFF2DE1C2), // Venom Cyan
+        //   ],
+        //   begin: Alignment.centerLeft,
+        //   end: Alignment.centerRight,
+
+        // colors: [
+        //     Color(0xFF000000), // Death Black
+        //     Color(0xFF1A1A2E), // Shadow Core
+        //     Color(0xFF16213E), // Terminal Blue
+        //     Color(0xFFE94560), // Blood Alert
+        //   ],
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,

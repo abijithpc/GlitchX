@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/Theme/theme_bloc.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/Theme/theme_event.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_state.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_event.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
@@ -34,6 +36,18 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            onPressed: () {
+              final currentAppTheme = context.read<ThemeBloc>().state.appTheme;
+              final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+              context.read<ThemeBloc>().add(
+                ToggleThemeEvent(uid, currentAppTheme),
+              );
+            },
+            icon: Icon(Icons.mode_night),
+          ),
+        ],
       ),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {

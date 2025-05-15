@@ -1,14 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Pages/category_page.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/Igdb/igdb_bloc.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/Igdb/igdb_event.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/Igdb/igdb_state.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/choice_chips.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/homescreen_titleandsectioncard.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/newly_released_card.dart';
-import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/popular_game_card.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_event.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class GreetingCard extends StatefulWidget {
   const GreetingCard({
@@ -35,17 +39,48 @@ class GreetingCard extends StatefulWidget {
 }
 
 class _GreetingCardState extends State<GreetingCard> {
+  final Map<String, YoutubePlayerController> _controllers = {};
+
   @override
   void initState() {
     super.initState();
     context.read<ProfileBloc>().add(LoadUserProfile());
+    context.read<IgdbBloc>().add(LoadUpcomingTrailers());
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  YoutubePlayerController _getController(String videoId) {
+    if (_controllers.containsKey(videoId)) {
+      return _controllers[videoId]!;
+    } else {
+      final controller = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: const YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+          disableDragSeek: false,
+          loop: false,
+          isLive: false,
+          forceHD: false,
+          enableCaption: true,
+        ),
+      );
+      _controllers[videoId] = controller;
+      return controller;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> sections = [
       _buildGreetingCard(),
-
       const SizedBox(height: 20),
       buildSectionCard(
         widget.screenWidth,
@@ -56,7 +91,6 @@ class _GreetingCardState extends State<GreetingCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 sectionTitle("Categories", widget.isTablet, Colors.white),
-
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -74,7 +108,7 @@ class _GreetingCardState extends State<GreetingCard> {
         ),
       ),
       const SizedBox(height: 24),
-      buildSectionCard(widget.screenWidth, child: PopularGameCard()),
+      _buildTrailerSection(),
       SizedBox(height: 20),
       buildSectionCard(
         widget.screenWidth,
@@ -93,9 +127,9 @@ class _GreetingCardState extends State<GreetingCard> {
                 children: [
                   Text(
                     "Newly Released",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
+                    style: const TextStyle(fontSize: 20, color: Colors.white),
                   ),
-                  NewlyReleasedCard(),
+                  const NewlyReleasedCard(),
                 ],
               ),
             ),
@@ -149,9 +183,9 @@ class _GreetingCardState extends State<GreetingCard> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       colors: [Color(0xFFFF4D4D), Color(0xFFFF9F4D)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -202,6 +236,161 @@ class _GreetingCardState extends State<GreetingCard> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTrailerSection() {
+    return buildSectionCard(
+      widget.screenWidth,
+      child: Container(
+        width: widget.screenWidth,
+        padding: const EdgeInsets.all(12),
+        // decoration: BoxDecoration(color: Colors.transparent.withAlpha(20)),
+        child: BlocBuilder<IgdbBloc, IGDBState>(
+          builder: (context, state) {
+            if (state is IGDBLoading) {
+              return const Center(
+                child: CupertinoActivityIndicator(radius: 20),
+              );
+            } else if (state is IGDBLoaded) {
+              if (state.trailers.isEmpty) {
+                return const Text(
+                  "No Upcoming trailer Found",
+                  style: TextStyle(color: Colors.white),
+                );
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Upcoming Game Trailer",
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 250,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children:
+                            state.trailers.map((trailer) {
+                              if (trailer.videoId == null ||
+                                  trailer.videoId!.isEmpty) {
+                                return Container(
+                                  width: 220,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.15),
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 6,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        trailer.name,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      const Text(
+                                        "No trailer available",
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              final controller = _getController(
+                                trailer.videoId!,
+                              );
+
+                              return Container(
+                                width: 320,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withAlpha(30),
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 6,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      trailer.name,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: YoutubePlayer(
+                                          controller: controller,
+                                          showVideoProgressIndicator: true,
+                                          progressIndicatorColor: Colors.red,
+                                          progressColors:
+                                              const ProgressBarColors(
+                                                playedColor: Colors.red,
+                                                handleColor: Colors.redAccent,
+                                              ),
+                                          onReady: () {
+                                            // Optional: perform additional actions when ready
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            } else if (state is IGDBError) {
+              return Text(
+                'Error: ${state.message}',
+                style: const TextStyle(color: Colors.red),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

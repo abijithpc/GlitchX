@@ -32,3 +32,13 @@ Widget buildSectionCard(double screenWidth, {required Widget child}) {
     child: child,
   );
 }
+
+Widget buildSectionPopularCard(double screenWidth, {required Widget child}) {
+  return Container(
+    width: screenWidth,
+    // padding: const EdgeInsets.all(16),
+    margin: const EdgeInsets.symmetric(vertical: 6),
+
+    child: child,
+  );
+}

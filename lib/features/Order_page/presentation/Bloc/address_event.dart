@@ -15,3 +15,9 @@ class SelectAddress extends AddressEvent {
 
   SelectAddress(this.addressId);
 }
+
+class DeleteAddressEvent extends AddressEvent {
+  final String addressId;
+
+  DeleteAddressEvent(this.addressId);
+}

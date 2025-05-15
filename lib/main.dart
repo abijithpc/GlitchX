@@ -7,6 +7,7 @@ import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_bloc.dart';
 import 'package:glitchxscndprjt/features/FavouritePage/presentation/Bloc/wishlist_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
+import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/Igdb/igdb_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/bottomnavigation_bar.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/category_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Pages/homepage.dart';
@@ -14,6 +15,7 @@ import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart'
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/signuppage.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_bloc.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
+import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/Theme/theme_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/edit_profile.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_detailspage.dart';
@@ -47,6 +49,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<PaymentBloc>()),
         BlocProvider(create: (context) => di.sl<ProductSearchBloc>()),
         BlocProvider(create: (context) => di.sl<WishlistBloc>()),
+        BlocProvider(create: (context) => di.sl<ThemeBloc>()),
+        BlocProvider(create: (context) => di.sl<IgdbBloc>()),
       ],
       child: Builder(
         builder:
@@ -55,6 +59,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               theme: ThemeData(primarySwatch: Colors.deepPurple),
               home: Splashscreen1(),
+
               routes: {
                 '/splash1': (_) => Splashscreen1(),
                 '/splash2': (_) => Splashscreen2(),

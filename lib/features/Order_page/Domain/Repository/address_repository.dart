@@ -6,4 +6,6 @@ abstract class AddressRepository {
   Future<List<AddressModel>> getAddress();
 
   Future<void> setDefaultAddress(String addressId);
+
+  Future<void> deleteAddress(String addressId);
 }

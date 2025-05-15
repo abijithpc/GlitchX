@@ -63,6 +63,8 @@ dependencies:
   intl: ^0.20.2
   confetti: ^0.8.0
   flutter_staggered_animations: ^1.1.1
+  url_launcher: ^6.3.1
+  youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
   flutter_test:

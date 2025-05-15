@@ -54,7 +54,7 @@ class _PopularGameCardState extends State<PopularGameCard> {
                 ),
               ),
               Text(
-                "See All",
+                "More",
                 style: TextStyle(color: Colors.blueAccent, fontSize: 16),
               ),
             ],
