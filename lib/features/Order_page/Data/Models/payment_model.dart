@@ -1,24 +1,27 @@
+import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
+
 class PaymentModel {
   final double amount;
   final String name;
   final String description;
-  // final String? contact;
   final String email;
+  final List<CartModel> orderItems;
 
   PaymentModel({
     required this.amount,
     required this.name,
     required this.description,
-    // required this.contact,
     required this.email,
+    required this.orderItems,
   });
+
   Map<String, dynamic> toMap() {
     return {
       'amount': amount,
       'name': name,
       'description': description,
-      // // 'contact': contact,
       'email': email,
+      'orderItems': orderItems.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -27,8 +30,12 @@ class PaymentModel {
       amount: map['amount']?.toDouble() ?? 0.0,
       name: map['name'] ?? '',
       description: map['description'] ?? '',
-      // // contact: map['contact'] ?? '',
       email: map['email'] ?? '',
+      orderItems:
+          (map['orderItems'] as List<dynamic>?)
+              ?.map((item) => CartModel.fromJson(item as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 }

@@ -8,6 +8,8 @@ import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.d
 import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartpage.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/widget/showquantity_dialog.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/Models/order_model.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Pages/order_summary_page.dart';
 
 class ProductDetailsPageCard extends StatefulWidget {
   const ProductDetailsPageCard({super.key, required this.product});
@@ -248,7 +250,59 @@ class _ProductDetailsPageCardState extends State<ProductDetailsPageCard> {
               SizedBox(width: screenWidth * 0.03),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    showQuantityDialog(context, (quantity) {
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user == null) return;
+                      final price = widget.product.price * quantity;
+
+                      double shippingFee;
+                      if (price < 100) {
+                        shippingFee = 100;
+                      } else if (price > 1000) {
+                        shippingFee = 0;
+                      } else {
+                        shippingFee = 40;
+                      }
+
+                      final grandTotal = price + shippingFee;
+                      final cartItem = CartModel(
+                        userId: user.uid,
+                        productId: widget.product.id!,
+                        name: widget.product.name,
+                        price: widget.product.price,
+                        quantity: quantity,
+                        imageUrl: widget.product.imageUrls.first,
+                        category: widget.product.category,
+                      );
+
+                      final orders = OrderModel(
+                        id: UniqueKey().toString(),
+                        userId: user.uid,
+                        productId: widget.product.id!,
+                        name: widget.product.name,
+                        price: widget.product.price,
+                        quantity: quantity,
+                        imageUrl: widget.product.imageUrls.first,
+                        status: 'Pending',
+                        orderAt: DateTime.now(),
+                      );
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => OrderSummaryPage(
+                                order: [orders],
+                                cartItems: [cartItem],
+                                totalItems: quantity,
+                                shippingFee: shippingFee,
+                                grandTotal: grandTotal,
+                              ),
+                        ),
+                      );
+                    });
+                  },
                   icon: Icon(Icons.payment),
                   label: Text("Buy Now"),
                   style: ElevatedButton.styleFrom(

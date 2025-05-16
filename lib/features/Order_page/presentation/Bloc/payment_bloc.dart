@@ -1,16 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/initialpayment_usecase.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/DataSource/razorpay_datasource.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_event.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
-  final InitialpaymentUsecase initialpaymentUsecase;
+  final RazorpayDatasource razorpayDatasource;
 
-  PaymentBloc({required this.initialpaymentUsecase}) : super(PaymentInitial()) {
-    // Using on() to handle events
+  PaymentBloc({required this.razorpayDatasource}) : super(PaymentInitial()) {
     on<StartPaymentEvent>(_onStartPayment);
-    // on<PaymentSuccessEvent>(_onPaymentSuccess);
-    // on<PaymentFailureEvent>(_onPaymentFailure);
+    on<PaymentSuccessEvent>(_onPaymentSuccess);
+    on<PaymentFailureEvent>(_onPaymentFailure);
   }
 
   Future<void> _onStartPayment(
@@ -18,25 +17,38 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     Emitter<PaymentState> emit,
   ) async {
     emit(PaymentInProgress());
+
     try {
-      await initialpaymentUsecase.call(event.paymentModel);
-      emit(PaymentSuccess("Payment Completed Successfully"));
+      razorpayDatasource.openCheckOut(
+        request: event.paymentModel,
+        onSuccess: (paymentId) {
+          add(
+            PaymentSuccessEvent(
+              paymentId: paymentId,
+              request: event.paymentModel,
+            ),
+          );
+        },
+        onFailure: (error) {
+          add(PaymentFailureEvent(error));
+        },
+      );
     } catch (e) {
       emit(PaymentFailure(e.toString()));
     }
   }
 
-  // Future<void> _onPaymentSuccess(
-  //   PaymentSuccessEvent event,
-  //   Emitter<PaymentState> emit,
-  // ) async {
-  //   emit(PaymentSuccess(event.paymentId));
-  // }
+  void _onPaymentSuccess(
+    PaymentSuccessEvent event,
+    Emitter<PaymentState> emit,
+  ) {
+    emit(PaymentSuccess(event.paymentId));
+  }
 
-  // Future<void> _onPaymentFailure(
-  //   PaymentFailureEvent event,
-  //   Emitter<PaymentState> emit,
-  // ) async {
-  //   emit(PaymentFailure(event.message));
-  // }
+  void _onPaymentFailure(
+    PaymentFailureEvent event,
+    Emitter<PaymentState> emit,
+  ) {
+    emit(PaymentFailure(event.message));
+  }
 }

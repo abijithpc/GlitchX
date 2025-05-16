@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/address_model.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/Models/order_model.dart';
 // import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
 // import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_state.dart';
 // import 'package:glitchxscndprjt/features/Order_page/presentation/Payment_failure_success.dart/order_failurepage.dart';
@@ -13,6 +14,7 @@ import 'package:glitchxscndprjt/features/Order_page/presentation/widget/summary_
 
 class OrderSummaryPage extends StatefulWidget {
   final List<CartModel> cartItems;
+  final List<OrderModel> order;
   final int totalItems;
   final double shippingFee;
   final double grandTotal;
@@ -20,6 +22,7 @@ class OrderSummaryPage extends StatefulWidget {
 
   const OrderSummaryPage({
     super.key,
+    required this.order,
     required this.cartItems,
     required this.totalItems,
     required this.shippingFee,
@@ -106,7 +109,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                     isBold: true,
                   ),
                   const SizedBox(height: 10),
-                  order_btn(
+                  OrderBtn(
                     widget: widget,
                     screenHeight: screenHeight,
                     screenWidth: screenWidth,

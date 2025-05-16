@@ -15,19 +15,6 @@ class _PopularGameCardState extends State<PopularGameCard> {
       'price': '\$49.99',
       'description': 'An epic adventure with immersive gameplay.',
     },
-    {
-      'name': 'Racing Fury',
-      'image':
-          'Assets/SplashPhotos/wp5622162-watch-dogs-hd-phone-wallpapers.jpg',
-      'price': '\$39.99',
-      'description': 'A fast-paced racing game with thrilling challenges.',
-    },
-    {
-      'name': 'Battle Royale Legends',
-      'image': 'Assets/SplashPhotos/wp6706533-gta-v-android-wallpapers.jpg',
-      'price': '\$59.99',
-      'description': 'Engage in exciting battle royale action with friends.',
-    },
   ];
 
   @override

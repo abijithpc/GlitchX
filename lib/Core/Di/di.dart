@@ -7,7 +7,12 @@ import 'package:glitchxscndprjt/features/HomePage/Data/Repository/igdb_repositor
 import 'package:glitchxscndprjt/features/HomePage/Domain/Repository/igdb_repository.dart';
 import 'package:glitchxscndprjt/features/HomePage/Domain/UseCase/getupcomingtrailer_usecase.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/Igdb/igdb_bloc.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/DataSource/order_remotedatasource.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/Repository/order_repositoryimpl.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/Repository/order_repository.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/delete_address_usecase.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/placeorder_usecase.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/order_bloc/order_bloc.dart';
 import 'package:http/http.dart' as http;
 
 // Data Layer
@@ -127,6 +132,9 @@ Future<void> init() async {
       accessToken: token!,
     ),
   );
+  sl.registerLazySingleton<OrderRemoteDataSource>(
+    () => OrderRemoteDataSource(firestore: sl()),
+  );
 
   // 📦 Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -154,6 +162,7 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<ThemeRepository>(() => ThemeReposiotryimpl(sl()));
   sl.registerLazySingleton<IgdbRepository>(() => IgdbRepositoryimpl(sl()));
+  sl.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(sl()));
 
   // ✅ UseCases
   sl.registerLazySingleton(() => SignupUsecase(sl()));
@@ -173,7 +182,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => RemoveproductcartUsecase(sl()));
   sl.registerLazySingleton(() => AddaddressUsecase(sl()));
   sl.registerLazySingleton(() => GetAddressesUseCase(sl()));
-  sl.registerLazySingleton(() => DeleteAddressUseCase(sl()),);
+  sl.registerLazySingleton(() => DeleteAddressUseCase(sl()));
   sl.registerLazySingleton(() => SetDefaultAddressUseCase(sl()));
   sl.registerLazySingleton(() => InitialpaymentUsecase(sl()));
   sl.registerLazySingleton(() => SearchProductsUsecase(sl()));
@@ -183,7 +192,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DeleteFromWishlistUsecase(sl()));
   sl.registerLazySingleton(() => GetThemeUsecase(sl()));
   sl.registerLazySingleton(() => SetThemeUsecase(sl()));
-  sl.registerLazySingleton(() => GetupcomingtrailerUsecase(sl()),);
+  sl.registerLazySingleton(() => GetupcomingtrailerUsecase(sl()));
+  sl.registerLazySingleton(() => PlaceOrderUsecase(sl()));
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -221,13 +231,14 @@ Future<void> init() async {
       addAddressUseCase: sl(),
       getAddressesUseCase: sl(),
       setDefaultAddressUseCase: sl(),
-      deleteAddressUseCase: sl()
+      deleteAddressUseCase: sl(),
     ),
   );
 
-  sl.registerFactory(() => PaymentBloc(initialpaymentUsecase: sl()));
+  sl.registerFactory(() => PaymentBloc(razorpayDatasource: sl()));
   sl.registerFactory(() => ProductSearchBloc(sl()));
   sl.registerFactory(() => WishlistBloc(sl(), sl(), sl()));
   sl.registerFactory(() => ThemeBloc(sl(), sl()));
-  sl.registerFactory(() => IgdbBloc(sl()),);
+  sl.registerFactory(() => IgdbBloc(sl()));
+  sl.registerFactory(() => OrderBloc(sl()));
 }

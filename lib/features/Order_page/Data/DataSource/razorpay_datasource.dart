@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/payment_model.dart';
-import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
-import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_event.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+
+typedef PaymentSuccessCallback = void Function(String paymentId);
+typedef PaymentFailureCallback = void Function(String error);
 
 class RazorpayDatasource {
   final Razorpay _razorpay = Razorpay();
-  PaymentModel? _latestRequest;
-  // final PaymentBloc bloc;
+  PaymentSuccessCallback? _onSuccess;
+  PaymentFailureCallback? _onFailure;
 
   RazorpayDatasource() {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -15,55 +15,35 @@ class RazorpayDatasource {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
-  void openCheckOut(PaymentModel request) {
-    _latestRequest = request;
+  void openCheckOut({
+    required PaymentModel request,
+    required PaymentSuccessCallback onSuccess,
+    required PaymentFailureCallback onFailure,
+  }) {
+    _onSuccess = onSuccess;
+    _onFailure = onFailure;
 
     var options = {
       'key': 'rzp_test_PAS4WBypQAT4o0',
       'amount': (request.amount * 100).toInt(),
       'name': request.name,
       'description': request.description,
-      'prefill': {
-        // if (request.contact != null) 'contact': request.contact,
-        'email': request.email,
-      },
+      'prefill': {'email': request.email},
       'external': {
         'wallets': ['paytm'],
       },
     };
-
     _razorpay.open(options);
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
     print("Success : ${response.paymentId}");
-    if (_latestRequest != null) {
-      try {
-        await FirebaseFirestore.instance.collection('payments').add({
-          'paymentId': response.paymentId,
-          'signature': response.signature,
-          'status': 'success',
-          'timestamp': FieldValue.serverTimestamp(),
-          'amount': _latestRequest!.amount,
-          'description': _latestRequest!.description,
-          // 'contact': _latestRequest!.contact,
-          'email': _latestRequest!.email,
-        });
-        // bloc.add(
-        //   PaymentSuccessEvent(
-        //     paymentId: response.paymentId!,
-        //     request: _latestRequest!,
-        //   ),
-        // );
-      } catch (e) {
-        print('Firebase write error: $e');
-      }
-    }
+    _onSuccess?.call(response.paymentId ?? '');
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print("Error : ${response.message}");
-    // bloc.add(PaymentFailureEvent(response.message ?? "Unknown error"));
+    _onFailure?.call(response.message ?? "Unknown error");
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {

@@ -9,6 +9,12 @@ class PaymentRepositoryimpl implements PaymentRepository {
 
   @override
   Future<void> initatePayment(PaymentModel request) async {
-    return datasource.openCheckOut(request);
+    return datasource.openCheckOut(
+      request: request,
+      onSuccess: (paymentId) {
+        print("Payment successfull with id : $paymentId");
+      },
+      onFailure: (error) => print('Payment failed with error: $error'),
+    );
   }
 }

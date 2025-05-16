@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/Models/order_model.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Pages/order_summary_page.dart';
 
 class CartPageCard extends StatelessWidget {
@@ -180,6 +181,23 @@ class CartPageCard extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
+                final user = FirebaseAuth.instance.currentUser;
+                if (user == null) return;
+
+                final order = OrderModel(
+                  id: UniqueKey().toString(),
+                  userId: user.uid,
+                  productId: 'multiple', // or leave empty if multiple products
+                  name: 'Cart Order',
+                  price: cartItems.fold(
+                    0,
+                    (sum, item) => sum + item.price * item.quantity,
+                  ),
+                  quantity: totalItems,
+                  imageUrl: cartItems.first.imageUrl, // or use a placeholder
+                  status: 'Pending',
+                  orderAt: DateTime.now(),
+                );
                 Navigator.of(context, rootNavigator: true).push(
                   MaterialPageRoute(
                     builder:
@@ -188,6 +206,7 @@ class CartPageCard extends StatelessWidget {
                           grandTotal: grandTotal,
                           shippingFee: shippingFee,
                           totalItems: totalItems,
+                          order: [order],
                         ),
                   ),
                 );

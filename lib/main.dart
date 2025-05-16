@@ -14,6 +14,7 @@ import 'package:glitchxscndprjt/features/HomePage/presentation/Pages/homepage.da
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/loginpage.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/signuppage.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/address_bloc.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/order_bloc/order_bloc.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/Theme/theme_bloc.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<WishlistBloc>()),
         BlocProvider(create: (context) => di.sl<ThemeBloc>()),
         BlocProvider(create: (context) => di.sl<IgdbBloc>()),
+        BlocProvider(create: (context) => di.sl<OrderBloc>()),
       ],
       child: Builder(
         builder:

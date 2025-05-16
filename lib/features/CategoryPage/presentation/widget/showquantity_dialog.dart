@@ -8,7 +8,7 @@ void showQuantityDialog(
   showDialog(
     context: context,
     builder:
-        (_) => Dialog(
+        (dialogContext) => Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
@@ -79,7 +79,7 @@ void showQuantityDialog(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.of(context).pop(context),
+                      onPressed: () => Navigator.of(dialogContext).pop(),
                       child: Text(
                         "Cancel",
                         style: TextStyle(
@@ -91,7 +91,7 @@ void showQuantityDialog(
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.of(dialogContext).pop();
                         onConfirm(selectedQuantity);
                       },
                       style: ElevatedButton.styleFrom(
