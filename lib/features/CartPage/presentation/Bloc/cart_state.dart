@@ -17,3 +17,5 @@ class CartError extends CartState {
 
   CartError(this.message);
 }
+
+class CartCleared extends CartState {}

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/add_to_cart_usecase.dart';
+import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/clear_cart_usecase.dart';
 import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/get_cart_item_usecase.dart';
 import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/removeproductcart_usecase.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
@@ -9,11 +10,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final AddToCartUseCase addToCartUseCase;
   final GetCartItemsUseCase getCartItemsUseCase;
   final RemoveproductcartUsecase removeproductcartUsecase;
+  final ClearCartUsecase clearCartUsecase;
 
   CartBloc({
     required this.addToCartUseCase,
     required this.getCartItemsUseCase,
     required this.removeproductcartUsecase,
+    required this.clearCartUsecase,
   }) : super(CartInitial()) {
     on<AddProductToCartEvent>((event, emit) async {
       emit(CartLoading());
@@ -46,6 +49,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(CartLoaded(updatedCartItems));
       } catch (e) {
         emit(CartError("Failed to remove product from cart"));
+      }
+    });
+
+    on<ClearCartEvent>((event, emit) async {
+      try {
+        await clearCartUsecase(event.userId);
+        emit(CartCleared()); // Optional state
+      } catch (e) {
+        emit(CartError("Failed to clear cart: ${e.toString()}"));
       }
     });
   }

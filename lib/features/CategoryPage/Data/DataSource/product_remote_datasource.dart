@@ -20,8 +20,6 @@ class ProductRemoteDatasource {
           // Fetch imageUrl and handle cases where it's empty or missing
           final imageUrls = List<String>.from(data['imageUrls'] ?? []);
 
-          print('Fetched Image URL: $imageUrls'); // Debug print
-
           return ProductModel(
             id: doc.id,
             name: data['name'],
@@ -38,7 +36,6 @@ class ProductRemoteDatasource {
           );
         }).toList();
 
-    print('Loaded ${products.length} products'); // Debug print
     return products;
   }
 
@@ -62,20 +59,6 @@ class ProductRemoteDatasource {
     return ProductModel.fromMap(doc.data()!, doc.id);
   }
 
-  Future<List<ProductModel>> searchProducts(String query) async {
-    final result =
-        await _firestore
-            .collection('products')
-            .orderBy('name')
-            .startAt([query])
-            .endAt(['$query\uf8ff'])
-            .get();
-
-    return result.docs
-        .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
-        .toList();
-  }
-
   Future<List<ProductModel>> getNewlyReleasedGames() async {
     final now = DateTime.now();
     final querysnapshot =
@@ -89,5 +72,56 @@ class ProductRemoteDatasource {
     return querysnapshot.docs
         .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
         .toList();
+  }
+
+  // product_remote_data_source.dart
+  Future<List<ProductModel>> searchProducts({
+    required String query,
+    required String category,
+    int? minPrice,
+    int? maxPrice,
+    required bool sortAscending,
+  }) async {
+    // Get all products snapshot from Firestore
+    final snapshot =
+        await FirebaseFirestore.instance.collection('products').get();
+
+    // Map docs to ProductModel
+    List<ProductModel> products =
+        snapshot.docs.map((doc) {
+          final data = doc.data();
+          return ProductModel.fromMap(data, doc.id);
+        }).toList();
+
+    // Filter by search query (case insensitive)
+    products =
+        products
+            .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+
+    // Filter by category if not 'All'
+    if (category != 'All') {
+      products = products.where((p) => p.category == category).toList();
+    }
+
+    // Filter by minPrice
+    if (minPrice != null) {
+      products = products.where((p) => p.price >= minPrice).toList();
+    }
+
+    // Filter by maxPrice
+    if (maxPrice != null) {
+      products = products.where((p) => p.price <= maxPrice).toList();
+    }
+
+    // Sort by price ascending or descending
+    products.sort(
+      (a, b) =>
+          sortAscending
+              ? a.price.compareTo(b.price)
+              : b.price.compareTo(a.price),
+    );
+
+    return products;
   }
 }

@@ -1,6 +1,10 @@
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/bottomnavigation_bar.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/order_model.dart';
 
@@ -22,7 +26,15 @@ class _InvoicePageState extends State<InvoicePage> {
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 3),
     );
+
     _confettiController.play();
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<CartBloc>().add(ClearCartEvent(user.uid));
+      });
+    }
   }
 
   @override
@@ -65,24 +77,7 @@ class _InvoicePageState extends State<InvoicePage> {
           ),
 
           // Confetti animation
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirection: pi / 2,
-              emissionFrequency: 0.07,
-              numberOfParticles: 25,
-              maxBlastForce: 30,
-              minBlastForce: 10,
-              gravity: 0.3,
-              colors: const [
-                Colors.green,
-                Colors.blue,
-                Colors.purple,
-                Colors.orange,
-              ],
-            ),
-          ),
+          Confetti(confettiController: _confettiController),
 
           // Main content
           SafeArea(
@@ -187,7 +182,9 @@ class _InvoicePageState extends State<InvoicePage> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PersistentBottomNavigationBar(),
+                          builder:
+                              (context) =>
+                                  PersistentBottomNavigationBar(intialIndex: 0),
                         ),
                         (route) => false,
                       );
@@ -198,6 +195,30 @@ class _InvoicePageState extends State<InvoicePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class Confetti extends StatelessWidget {
+  const Confetti({super.key, required ConfettiController confettiController})
+    : _confettiController = confettiController;
+
+  final ConfettiController _confettiController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConfettiWidget(
+        confettiController: _confettiController,
+        blastDirection: pi / 2,
+        emissionFrequency: 0.07,
+        numberOfParticles: 25,
+        maxBlastForce: 30,
+        minBlastForce: 10,
+        gravity: 0.3,
+        colors: const [Colors.green, Colors.blue, Colors.purple, Colors.orange],
       ),
     );
   }

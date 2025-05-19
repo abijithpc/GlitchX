@@ -11,4 +11,9 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<void> placeOrder(List<OrderModel> order) {
     return remoteDataSource.placeOrder(order);
   }
+
+  @override
+  Future<List<OrderModel>> getOrdersByUser(String userId) {
+    return remoteDataSource.fetchOrdersByUser(userId);
+  }
 }

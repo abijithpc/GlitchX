@@ -12,31 +12,20 @@ class FetchProductDetails extends ProductEvent {
   FetchProductDetails(this.productId);
 }
 
-class SortAndFIlterProducts extends ProductEvent {
-  final String sortOption;
-  final String category;
-  final String availability;
-  final double minPrice;
-  final double maxPrice;
-  final String rating;
-
-  SortAndFIlterProducts({
-    required this.sortOption,
-    required this.category,
-    required this.availability,
-    required this.maxPrice,
-    required this.minPrice,
-    required this.rating,
-  });
-
-  List<Object> get props => [
-    sortOption,
-    category,
-    availability,
-    maxPrice,
-    minPrice,
-    rating,
-  ];
-}
-
 class FetchNewlyReleasedGame extends ProductEvent {}
+
+class SearchFilterSortProductsEvent extends ProductEvent {
+  final String query;
+  final String category; // e.g. 'All' or specific category
+  final int? minPrice;
+  final int? maxPrice;
+  final bool sortAscending; // true = sort price ascending, false descending
+
+  SearchFilterSortProductsEvent({
+    required this.query,
+    required this.category,
+    this.minPrice,
+    this.maxPrice,
+    this.sortAscending = true,
+  });
+}

@@ -73,7 +73,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: Column(
                     children: [
-                      ProfileDetailsSection(user: state.user),
+                      ProfileDetailsSection(
+                        user: state.user,
+                      ),
                       ProfileTile(
                         icon: Icons.logout,
                         title: "Sign Out",

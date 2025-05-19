@@ -25,6 +25,7 @@ class CartRemoteDataSource {
       throw Exception('Failed to add product to cart: $e');
     }
   }
+
   Future<List<CartModel>> fetchCartItems(String userId) async {
     try {
       final docSnapshot = await firestore.collection('cart').doc(userId).get();
@@ -73,5 +74,11 @@ class CartRemoteDataSource {
     } catch (e) {
       throw Exception("Error removing item from cart: $e");
     }
+  }
+
+  Future<void> clearCart(String userId) async {
+    final cartRef = firestore.collection('cart').doc(userId);
+
+    await cartRef.update({'cartItems': []});
   }
 }

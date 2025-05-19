@@ -15,6 +15,20 @@ class OrderRemoteDataSource {
     }
 
     await batch.commit();
-    print("✅ All orders committed to Firestore");
+  }
+
+  Future<List<OrderModel>> fetchOrdersByUser(String userId) async {
+    final querySnapshot =
+        await firestore
+            .collection('orders')
+            .where('userId', isEqualTo: userId)
+            .orderBy('orderedAt', descending: true)
+            .get();
+
+    return querySnapshot.docs.map((doc) {
+      final data = doc.data();
+      data['id'] = doc.id; // Ensure the doc ID is included
+      return OrderModel.fromMap(data);
+    }).toList();
   }
 }

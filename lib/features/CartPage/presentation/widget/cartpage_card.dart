@@ -6,6 +6,8 @@ import 'package:glitchxscndprjt/features/CartPage/Data/Models/cart_model.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/order_model.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/order_bloc/order_state.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/payment_state.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Pages/order_summary_page.dart';
 
 class CartPageCard extends StatelessWidget {
@@ -198,18 +200,30 @@ class CartPageCard extends StatelessWidget {
                   status: 'Pending',
                   orderAt: DateTime.now(),
                 );
-                Navigator.of(context, rootNavigator: true).push(
-                  MaterialPageRoute(
-                    builder:
-                        (_) => OrderSummaryPage(
-                          cartItems: cartItems,
-                          grandTotal: grandTotal,
-                          shippingFee: shippingFee,
-                          totalItems: totalItems,
-                          order: [order],
-                        ),
-                  ),
-                );
+                Navigator.of(context, rootNavigator: true)
+                    .push(
+                      MaterialPageRoute(
+                        builder:
+                            (_) => OrderSummaryPage(
+                              cartItems: cartItems,
+                              grandTotal: grandTotal,
+                              shippingFee: shippingFee,
+                              totalItems: totalItems,
+                              order: [order],
+                            ),
+                      ),
+                    )
+                    .then((PaymentSuccess) {
+                      if (PaymentSuccess == true) {
+                        final userId = FirebaseAuth.instance.currentUser?.uid;
+                        if (userId != null) {
+                          // Clear or reload cart items after order placed
+                          context.read<CartBloc>().add(
+                            FetchCartItemsEvent(userId),
+                          );
+                        }
+                      }
+                    });
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,

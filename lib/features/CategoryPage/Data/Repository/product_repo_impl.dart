@@ -18,8 +18,20 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<List<ProductModel>> searchProducts(String query) {
-    return remotedatasource.searchProducts(query);
+  Future<List<ProductModel>> searchProducts({
+    required String query,
+    required String category,
+    int? minPrice,
+    int? maxPrice,
+    required bool sortAscending,
+  }) async {
+    return await remotedatasource.searchProducts(
+      query: query,
+      category: category,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      sortAscending: sortAscending,
+    );
   }
 
   @override

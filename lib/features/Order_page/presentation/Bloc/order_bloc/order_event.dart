@@ -4,8 +4,15 @@ abstract class OrderEvent {}
 
 class PlaceOrderEvent extends OrderEvent {
   final List<OrderModel> models;
+  final String userId;
 
-  PlaceOrderEvent(this.models);
+  PlaceOrderEvent(this.models, this.userId);
 }
 
 class ResetOrderState extends OrderEvent {}
+
+class FetchOrders extends OrderEvent {
+  final String userId;
+
+  FetchOrders(this.userId);
+}

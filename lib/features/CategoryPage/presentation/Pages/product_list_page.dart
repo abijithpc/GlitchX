@@ -33,21 +33,6 @@ class _ProductListPageState extends State<ProductListPage> {
         title: Text(widget.category, style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.black,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => SortingFilterPage(category: widget.category),
-                ),
-              );
-            },
-            icon: Icon(Icons.sort),
-            color: Colors.white,
-          ),
-        ],
       ),
       body: ScreenBackGround(
         alignment: Alignment.center,

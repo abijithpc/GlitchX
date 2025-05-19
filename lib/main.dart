@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Auth/presentation/Pages/reset_password.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
-import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_bloc.dart';
 import 'package:glitchxscndprjt/features/FavouritePage/presentation/Bloc/wishlist_bloc.dart';
 import 'package:glitchxscndprjt/features/HomePage/Cubit/navigation_cubit.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Bloc/Igdb/igdb_bloc.dart';
@@ -48,7 +47,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<CartBloc>()),
         BlocProvider(create: (context) => di.sl<AddressBloc>()),
         BlocProvider(create: (context) => di.sl<PaymentBloc>()),
-        BlocProvider(create: (context) => di.sl<ProductSearchBloc>()),
+        // BlocProvider(create: (context) => di.sl<ProductSearchBloc>()),
         BlocProvider(create: (context) => di.sl<WishlistBloc>()),
         BlocProvider(create: (context) => di.sl<ThemeBloc>()),
         BlocProvider(create: (context) => di.sl<IgdbBloc>()),

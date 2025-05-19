@@ -20,3 +20,19 @@ class OrderError extends OrderState {
 
   OrderError(this.message);
 }
+
+class OrderDetailsInitial extends OrderState {}
+
+class OrderDetailsLoading extends OrderState {}
+
+class OrderDetailsLoaded extends OrderState {
+  final OrderModel order;
+
+  OrderDetailsLoaded(this.order);
+}
+
+class OrderDetailsError extends OrderState {
+  final String message;
+
+  OrderDetailsError(this.message);
+}

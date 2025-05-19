@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:glitchxscndprjt/features/CartPage/Domain/UseCase/clear_cart_usecase.dart';
+import 'package:glitchxscndprjt/features/CategoryPage/Domain/Models/product_model.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/DataSource/igdn_remote_datasource.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/Igdb_Auth/igdb_auth.dart';
 import 'package:glitchxscndprjt/features/HomePage/Data/Repository/igdb_repositoryimpl.dart';
@@ -11,6 +13,7 @@ import 'package:glitchxscndprjt/features/Order_page/Data/DataSource/order_remote
 import 'package:glitchxscndprjt/features/Order_page/Data/Repository/order_repositoryimpl.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/Repository/order_repository.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/delete_address_usecase.dart';
+import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/getorder_usecase.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/placeorder_usecase.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/order_bloc/order_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -42,9 +45,7 @@ import 'package:glitchxscndprjt/features/CategoryPage/Domain/Repository/product_
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/get_newlyreleased_gameusecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproduct_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/getproductid_usecase.dart';
-import 'package:glitchxscndprjt/features/CategoryPage/Domain/UseCase/search_products_usecase.dart';
 import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/product_bloc.dart';
-import 'package:glitchxscndprjt/features/CategoryPage/presentation/Bloc/search_bloc.dart';
 import 'package:glitchxscndprjt/features/FavouritePage/Data/DataSource/wishlist_remotedatasource.dart';
 import 'package:glitchxscndprjt/features/FavouritePage/Data/Repository/wishlist_reposiotryimpl.dart';
 import 'package:glitchxscndprjt/features/FavouritePage/Domain/Repository/wishlist_reposiotry.dart';
@@ -173,7 +174,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => Updateuserprofileusecase(sl()));
   sl.registerLazySingleton(() => UpdateprofileimageUsecase(sl()));
-  // sl.registerLazySingleton(() => UpdateLocationUsecase(sl()));
   sl.registerLazySingleton(() => GetusercategoriesUsecase(sl()));
   sl.registerLazySingleton(() => GetproductUsecase(sl()));
   sl.registerLazySingleton(() => GetproductidUsecase(sl()));
@@ -185,7 +185,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DeleteAddressUseCase(sl()));
   sl.registerLazySingleton(() => SetDefaultAddressUseCase(sl()));
   sl.registerLazySingleton(() => InitialpaymentUsecase(sl()));
-  sl.registerLazySingleton(() => SearchProductsUsecase(sl()));
   sl.registerLazySingleton(() => GetNewlyreleasedGameusecase(sl()));
   sl.registerLazySingleton(() => AddtowishlistUsecase(sl()));
   sl.registerLazySingleton(() => GetWishlistUsecase(sl()));
@@ -194,6 +193,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SetThemeUsecase(sl()));
   sl.registerLazySingleton(() => GetupcomingtrailerUsecase(sl()));
   sl.registerLazySingleton(() => PlaceOrderUsecase(sl()));
+  sl.registerLazySingleton(() => ClearCartUsecase(sl()));
+  sl.registerLazySingleton(() => GetUserOrdersUseCase(sl()));
 
   // 🔁 Bloc
   sl.registerFactory(
@@ -223,6 +224,7 @@ Future<void> init() async {
       addToCartUseCase: sl(),
       getCartItemsUseCase: sl(),
       removeproductcartUsecase: sl(),
+      clearCartUsecase: sl(),
     ),
   );
 
@@ -235,10 +237,12 @@ Future<void> init() async {
     ),
   );
 
+  sl.registerLazySingleton<List<ProductModel>>(() => []);
+
   sl.registerFactory(() => PaymentBloc(razorpayDatasource: sl()));
-  sl.registerFactory(() => ProductSearchBloc(sl()));
+  // sl.registerFactory(() => ProductSearchBloc(sl()));
   sl.registerFactory(() => WishlistBloc(sl(), sl(), sl()));
   sl.registerFactory(() => ThemeBloc(sl(), sl()));
   sl.registerFactory(() => IgdbBloc(sl()));
-  sl.registerFactory(() => OrderBloc(sl()));
+  sl.registerFactory(() => OrderBloc(sl(), sl(), sl()));
 }

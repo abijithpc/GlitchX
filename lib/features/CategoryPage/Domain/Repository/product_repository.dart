@@ -5,7 +5,13 @@ abstract class ProductRepository {
 
   Future<ProductModel> getProductById(String id);
 
-  Future<List<ProductModel>> searchProducts(String query);
+  Future<List<ProductModel>> searchProducts({
+    required String query,
+    required String category,
+    int? minPrice,
+    int? maxPrice,
+    required bool sortAscending,
+  });
 
   Future<List<ProductModel>> getNewlyReleasedGames();
 }

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
-import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/choice_chips.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/greeting_card.dart';
 import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/homepage_appbar.dart';
-import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/homescreen_titleandsectioncard.dart';
-import 'package:glitchxscndprjt/features/HomePage/presentation/Widget/popular_game_card.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profile_state.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Bloc/profilebloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class Homepage extends StatelessWidget {

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:glitchxscndprjt/features/CartPage/presentation/Pages/cartpage.dart';
 import 'package:glitchxscndprjt/features/FavouritePage/presentation/Pages/wishlist_page.dart';
+import 'package:glitchxscndprjt/features/Order_page/Data/Models/order_model.dart';
+import 'package:glitchxscndprjt/features/Order_page/presentation/Pages/order_listpage.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/Data/Models/user_model.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/edit_profile.dart';
 import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_detailspage.dart';
@@ -117,7 +119,16 @@ class ProfileDetailsSection extends StatelessWidget {
             );
           },
         ),
-        ProfileTile(icon: Icons.list_alt, title: "Orders", onTap: () {}),
+        ProfileTile(
+          icon: Icons.list_alt,
+          title: "Orders",
+          onTap: () {
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).push(MaterialPageRoute(builder: (context) => OrdersPage()));
+          },
+        ),
         ProfileTile(
           icon: Icons.privacy_tip_outlined,
           title: "Privacy & Policy",

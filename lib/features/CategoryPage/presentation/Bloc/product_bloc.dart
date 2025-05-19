@@ -36,68 +36,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
     });
 
-    on<SortAndFIlterProducts>((event, emit) async {
-      emit(ProductLoading());
-      try {
-        final products = await getproductUsecase.call(event.category);
-
-        List<ProductModel> filteredProducts =
-            products.where((product) {
-              bool matchesCategory =
-                  (event.category == 'All Category' ||
-                      product.category == event.category);
-              bool matchesAvailability =
-                  (event.availability == 'All Availability' ||
-                      (event.availability == 'In Stock' && product.stock > 0) ||
-                      (event.availability == 'Out of Stock' &&
-                          product.stock == 0));
-              bool matchesRating =
-                  (event.rating == 'All Ratings' ||
-                      (product.rating >=
-                              double.parse(event.rating.split(' ')[0]) &&
-                          product.rating <=
-                              double.parse(event.rating.split(' ')[2])));
-              bool matchesPrice =
-                  product.price >= event.minPrice &&
-                  product.price <= event.maxPrice;
-
-              return matchesCategory &&
-                  matchesAvailability &&
-                  matchesRating &&
-                  matchesPrice;
-            }).toList();
-
-        // Apply sorting
-        if (event.sortOption == 'Price Low to High') {
-          filteredProducts.sort((a, b) => a.price.compareTo(b.price));
-        } else if (event.sortOption == 'Price High to Low') {
-          filteredProducts.sort((a, b) => b.price.compareTo(a.price));
-        } else if (event.sortOption == 'Name (A-Z)') {
-          filteredProducts.sort((a, b) => a.name.compareTo(b.name));
-        } else if (event.sortOption == 'Name (Z-A)') {
-          filteredProducts.sort((a, b) => b.name.compareTo(a.name));
-        } else if (event.sortOption == 'Rating (High to Low)') {
-          filteredProducts.sort((a, b) => b.rating.compareTo(a.rating));
-        } else if (event.sortOption == 'Rating (Low to High)') {
-          filteredProducts.sort((a, b) => a.rating.compareTo(b.rating));
-        }
-
-        // Emit the sorted and filtered product list
-        emit(
-          ProductSortedAndFiltered(
-            products: filteredProducts,
-            selectedSort: event.sortOption,
-            selectedAvailability: event.availability,
-            selectedRating: event.rating,
-            minPrice: event.minPrice,
-            maxPrice: event.maxPrice,
-          ),
-        );
-      } catch (e) {
-        emit(ProductError('Failed to load products'));
-      }
-    });
-
     on<FetchNewlyReleasedGame>((event, emit) async {
       emit(ProductLoading());
       try {
@@ -107,6 +45,22 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         emit(
           ProductError("Failed to load newly released Games : ${e.toString()}"),
         );
+      }
+    });
+    // product_bloc.dart
+    on<SearchFilterSortProductsEvent>((event, emit) async {
+      emit(ProductLoading());
+      try {
+        final products = await getproductUsecase.searchFilterSortProducts(
+          query: event.query,
+          category: event.category,
+          minPrice: event.minPrice,
+          maxPrice: event.maxPrice,
+          sortAscending: event.sortAscending,
+        );
+        emit(ProductLoaded(products));
+      } catch (e) {
+        emit(ProductError('Failed to load products'));
       }
     });
   }

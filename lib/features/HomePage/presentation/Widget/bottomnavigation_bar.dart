@@ -8,10 +8,19 @@ import 'package:glitchxscndprjt/features/ProfilePage/presentation/Pages/profile_
 import 'package:glitchxscndprjt/features/SearchPage/presentation/Pages/search_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
-class PersistentBottomNavigationBar extends StatelessWidget {
-  PersistentBottomNavigationBar({super.key});
+class PersistentBottomNavigationBar extends StatefulWidget {
+  final int intialIndex;
+  const PersistentBottomNavigationBar({super.key, this.intialIndex = 0});
 
+  @override
+  State<PersistentBottomNavigationBar> createState() =>
+      _PersistentBottomNavigationBarState();
+}
+
+class _PersistentBottomNavigationBarState
+    extends State<PersistentBottomNavigationBar> {
   final PersistentTabController _controller = PersistentTabController();
+
   final String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   List<Widget> get _pages => [

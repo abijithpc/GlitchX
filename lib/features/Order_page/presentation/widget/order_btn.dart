@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_bloc.dart';
+import 'package:glitchxscndprjt/features/CartPage/presentation/Bloc/cart_event.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/order_model.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/payment_model.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/Bloc/order_bloc/order_bloc.dart';
@@ -70,7 +72,7 @@ class _OrderBtnState extends State<OrderBtn> {
                     );
                   }).toList();
 
-              context.read<OrderBloc>().add(PlaceOrderEvent(orders));
+              context.read<OrderBloc>().add(PlaceOrderEvent(orders, user.uid));
             } else if (paymentState is PaymentFailure) {
               _orderPlacedForCurrentPayment = false;
               _isPaymentInProgress = false;
@@ -95,6 +97,10 @@ class _OrderBtnState extends State<OrderBtn> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Order placed successfully!")),
               );
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                context.read<CartBloc>().add(ClearCartEvent(user.uid));
+              }
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

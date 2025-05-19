@@ -26,3 +26,9 @@ class LoadCartItemsEvent extends CartEvent {
 
   LoadCartItemsEvent(this.userId);
 }
+
+class ClearCartEvent extends CartEvent {
+  final String userId;
+
+  ClearCartEvent(this.userId);
+}
