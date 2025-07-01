@@ -13,6 +13,7 @@ import 'package:glitchxscndprjt/features/Profile_Page/presentation/Bloc/profileb
 import 'package:glitchxscndprjt/features/Profile_Page/presentation/widget/profile_detail_section.dart';
 import 'package:glitchxscndprjt/features/Profile_Page/presentation/widget/profile_tile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -90,7 +91,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   actions: [
                                     CupertinoDialogAction(
-                                      onPressed: () => _signOut(),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        _signOut();
+                                      },
                                       textStyle: TextStyle(color: Colors.red),
                                       child: Text("Sign Out"),
                                     ),
@@ -123,12 +127,23 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    await GoogleSignIn().signOut();
+    try {
+      await FirebaseAuth.instance.signOut();
 
-    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const Loginpage()),
-      (route) => false,
-    );
+      // Google sign-out only on non-web platforms
+      if (!kIsWeb) {
+        await GoogleSignIn().signOut();
+      }
+
+      // Navigate to login page
+      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const Loginpage()),
+        (route) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Sign out failed: $e")));
+    }
   }
 }

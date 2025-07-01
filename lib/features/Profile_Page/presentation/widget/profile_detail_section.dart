@@ -110,12 +110,11 @@ class ProfileDetailsSection extends StatelessWidget {
           icon: Icons.favorite,
           title: "Favourites",
           onTap: () {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user == null) return;
             Navigator.of(context, rootNavigator: true).push(
               MaterialPageRoute(
-                builder:
-                    (context) => WishlistPage(
-                      userId: FirebaseAuth.instance.currentUser!.uid,
-                    ),
+                builder: (context) => WishlistPage(userId: user.uid),
               ),
             );
           },

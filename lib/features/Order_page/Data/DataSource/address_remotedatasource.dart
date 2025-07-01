@@ -9,7 +9,9 @@ class AddressRemotedatasource {
   AddressRemotedatasource(this._auth, this._firebaseFirestore);
 
   Future<void> addAddress(AddressModel model) async {
-    final uid = _auth.currentUser!.uid;
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("User not logged in");
+    final uid = user.uid;
     await _firebaseFirestore
         .collection('users')
         .doc(uid)
@@ -19,7 +21,9 @@ class AddressRemotedatasource {
   }
 
   Future<List<AddressModel>> getAddress() async {
-    final uid = _auth.currentUser!.uid;
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("User not logged in");
+    final uid = user.uid;
     final snapshot =
         await _firebaseFirestore
             .collection('users')
@@ -43,14 +47,15 @@ class AddressRemotedatasource {
           .collection("address")
           .doc(addressId)
           .delete();
-
     } catch (e) {
       rethrow;
     }
   }
 
   Future<void> setDefaultAddress(String addressId) async {
-    final uid = _auth.currentUser!.uid;
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("User not logged in");
+    final uid = user.uid;
     final addressCollection = _firebaseFirestore
         .collection('users')
         .doc(uid)

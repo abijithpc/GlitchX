@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '290026814616',
     projectId: 'glitchxapp00711',
     storageBucket: 'glitchxapp00711.firebasestorage.app',
-    iosBundleId: 'com.example.glitchxscndprjt',
+    iosBundleId: 'com.glitchx.user',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '290026814616',
     projectId: 'glitchxapp00711',
     storageBucket: 'glitchxapp00711.firebasestorage.app',
-    iosBundleId: 'com.example.glitchxscndprjt',
+    iosBundleId: 'com.glitchx.user',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'glitchxapp00711.firebasestorage.app',
     measurementId: 'G-LBCSS169RJ',
   );
-
 }

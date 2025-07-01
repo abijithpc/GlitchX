@@ -1,25 +1,49 @@
 import 'package:flutter/material.dart';
 
 class LoginSplashBtn extends StatelessWidget {
-  const LoginSplashBtn({super.key, required this.screenWidth});
-
   final double screenWidth;
+  final double screenHeight;
+
+  const LoginSplashBtn({
+    super.key,
+    required this.screenWidth,
+    required this.screenHeight,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final double buttonFont = screenWidth * 0.015;
+    final double verticalPadding = screenHeight * 0.02;
+
     return Container(
-      decoration: BoxDecoration(color: Colors.black.withAlpha(10)),
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      height: 80,
+      height: screenHeight * 0.1,
       width: screenWidth,
+      decoration: const BoxDecoration(color: Colors.black),
+      padding: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.03,
+        vertical: verticalPadding,
+      ),
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll<Color>(Colors.blueAccent),
+          padding: WidgetStatePropertyAll(
+            EdgeInsets.symmetric(
+              vertical: screenHeight * 0.015,
+              horizontal: screenWidth * 0.05,
+            ),
+          ),
+          backgroundColor: const WidgetStatePropertyAll<Color>(
+            Colors.blueAccent,
+          ),
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, '/login');
-        },
-        child: Text("Tap to Login", style: TextStyle(color: Colors.white)),
+        onPressed: () => Navigator.pushNamed(context, '/login'),
+        child: Text(
+          "Tap to Login",
+          style: TextStyle(
+            fontSize: buttonFont,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

@@ -29,11 +29,13 @@ import 'package:glitchxscndprjt/features/Splash_Screen/Presentation/splashscreen
 import 'package:glitchxscndprjt/features/Splash_Screen/Presentation/splashscreen2.dart';
 import 'Core/Di/di.dart' as di;
 import 'features/Auth/presentation/Bloc/auth_bloc.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'firebase_options.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await di.init();
   runApp(MyApp());
 }

@@ -12,9 +12,7 @@ class PrivacyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
       try {
         final policy = await policyUsecase();
         emit(PrivacyPolicyLoaded(policy.content));
-      } catch (e, stackTrace) {
-        print('Error loading privacy policy: $e');
-        print('Stack trace: $stackTrace');
+      } catch (e) {
         emit(PrivacyPolicyError(e.toString()));
       }
     });

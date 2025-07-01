@@ -130,7 +130,7 @@ class OrderList_widget extends StatelessWidget {
 
                         if (confirm == true) {
                           context.read<OrderBloc>().add(
-                            CancelOrderEvent(order.id),
+                            CancelOrderEvent(order.id, order.userId),
                           );
                         }
                         return confirm ?? false;
@@ -174,7 +174,7 @@ class OrderList_widget extends StatelessWidget {
                               children: [
                                 Text(
                                   firstItem != null
-                                      ? 'Quantity: ${firstItem.quantity ?? 0}\nPrice: ₹ ${firstItem.price ?? 0}'
+                                      ? 'Quantity: ${firstItem.quantity}\nPrice: ₹ ${firstItem.price}'
                                       : 'No item details available',
                                   style: const TextStyle(color: Colors.white70),
                                 ),

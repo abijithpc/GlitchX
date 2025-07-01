@@ -19,13 +19,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   void initState() {
     super.initState();
-    // Fetch product details using the productId passed to the page
     context.read<ProductBloc>().add(FetchProductDetails(widget.productId));
   }
 
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -35,36 +35,46 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             if (state is ProductDetailsLoaded) {
               return Text(
                 state.product.name,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screen.width * 0.05,
+                ),
               );
             } else if (state is ProductError) {
-              return Text("Error");
+              return Text("Error", style: TextStyle(color: Colors.red));
             } else {
-              return Text("Loading...");
+              return Text(
+                "Loading...",
+                style: TextStyle(color: Colors.white70),
+              );
             }
           },
         ),
       ),
       body: ScreenBackGround(
         alignment: Alignment.center,
+        screenHeight: screen.height,
+        screenWidth: screen.width,
         widget: BlocBuilder<ProductBloc, ProductState>(
           builder: (context, state) {
             if (state is ProductLoading) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (state is ProductDetailsLoaded) {
-              final product = state.product;
               return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ProductDetailsPageCard(product: product),
+                padding: EdgeInsets.all(screen.width * 0.04),
+                child: ProductDetailsPageCard(product: state.product),
               );
             } else if (state is ProductError) {
-              return Center(child: Text(state.message));
+              return Center(
+                child: Text(
+                  state.message,
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
             }
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           },
         ),
-        screenHeight: screen.height,
-        screenWidth: screen.width,
       ),
     );
   }

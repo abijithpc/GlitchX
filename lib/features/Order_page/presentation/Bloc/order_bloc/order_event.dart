@@ -19,8 +19,9 @@ class FetchOrders extends OrderEvent {
 
 class CancelOrderEvent extends OrderEvent {
   String orderId;
+  final String userId;
 
-  CancelOrderEvent(this.orderId);
+  CancelOrderEvent(this.orderId, this.userId);
 
   List<Object> get props => [orderId];
 }

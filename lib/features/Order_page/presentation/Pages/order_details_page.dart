@@ -3,7 +3,7 @@ import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/Order_page/Data/Models/order_model.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/widget/invoice_download.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/widget/order_details.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:printing/printing.dart';
 
 class OrderDetailsPage extends StatelessWidget {

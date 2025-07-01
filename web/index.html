@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <!--
+  <head>
+    <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
 
@@ -14,25 +14,64 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="$FLUTTER_BASE_HREF">
+    <base href="$FLUTTER_BASE_HREF" />
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="description" content="A new Flutter project." />
 
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="glitchxscndprjt">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+    <!-- ✅ Add Razorpay Web SDK here -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+    <!-- iOS meta tags & icons -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="glitchxscndprjt" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
 
-  <title>glitchxscndprjt</title>
-  <link rel="manifest" href="manifest.json">
-</head>
-<body>
-  <script src="flutter_bootstrap.js" async></script>
-</body>
+    <!-- PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="glitchxscndprjt" />
+    <meta name="theme-color" content="#0175C2" />
+
+    <!-- Icons -->
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="icons/Icon-192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="icons/Icon-512.png"
+    />
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <title>glitchxscndprjt</title>
+    <link rel="manifest" href="manifest.json" />
+  </head>
+
+  <body>
+    <script src="flutter_bootstrap.js" async></script>
+    // Import the functions you need from the SDKs you need import {
+    initializeApp } from "firebase/app"; import { getAnalytics } from
+    "firebase/analytics"; // TODO: Add SDKs for Firebase products that you want
+    to use // https://firebase.google.com/docs/web/setup#available-libraries //
+    Your web app's Firebase configuration // For Firebase JS SDK v7.20.0 and
+    later, measurementId is optional const firebaseConfig = { apiKey:
+    "AIzaSyCJ1GwnZSv_2sT3q5MB6pUQxEx7SS1F5aY", authDomain:
+    "glitchxapp00711.firebaseapp.com", projectId: "glitchxapp00711",
+    storageBucket: "glitchxapp00711.firebasestorage.app", messagingSenderId:
+    "290026814616", appId: "1:290026814616:web:617593960f5c15b71024ed",
+    measurementId: "G-X5NM22E2Z9" }; // Initialize Firebase const app =
+    initializeApp(firebaseConfig); const analytics = getAnalytics(app);
+  </body>
 </html>

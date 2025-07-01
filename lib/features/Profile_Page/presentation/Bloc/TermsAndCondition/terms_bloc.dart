@@ -11,10 +11,8 @@ class TermsBloc extends Bloc<TermsEvent, TermsState> {
       emit(TermsLoading());
       try {
         final terms = await _termsconditionUsecase();
-        print("Terms and Condition : $terms");
         emit(TermsLoaded(terms.Terms));
       } catch (e) {
-        print("Error is : ${e.toString()}");
         emit(TermsError(e.toString()));
       }
     });

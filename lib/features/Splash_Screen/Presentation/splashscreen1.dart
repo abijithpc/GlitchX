@@ -14,14 +14,14 @@ class _Splashscreen1State extends State<Splashscreen1> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 3), () {
         checkUser();
       });
     });
   }
 
   Future<void> checkUser() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     await FirebaseAuth.instance.authStateChanges().first;
     final user = FirebaseAuth.instance.currentUser;
@@ -45,18 +45,34 @@ class _Splashscreen1State extends State<Splashscreen1> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final double imageHeight = size.height * 0.25; // 25% of screen height
+    final double textSize = size.width * 0.08; // 8% of screen width
+
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(color: Colors.black),
+        decoration: const BoxDecoration(color: Colors.black),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('Assets/Logo/Untitled_design-removebg-preview.png'),
+              SizedBox(
+                height: imageHeight,
+                child: Image.asset(
+                  'Assets/Logo/Untitled_design-removebg-preview.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SizedBox(height: size.height * 0.05), // spacing
               DefaultTextStyle(
-                style: TextStyle(fontSize: 30, letterSpacing: 5),
+                style: TextStyle(
+                  fontSize: textSize,
+                  letterSpacing: 5,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
                 child: AnimatedTextKit(
                   animatedTexts: [WavyAnimatedText("GlitchX")],
                   isRepeatingAnimation: true,

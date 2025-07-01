@@ -16,6 +16,8 @@ import 'package:glitchxscndprjt/features/Order_page/presentation/Pages/order_sum
 import 'package:glitchxscndprjt/features/Order_page/presentation/widget/invoice_page.dart';
 import 'package:glitchxscndprjt/features/Order_page/presentation/widget/order_fail_invoice.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:glitchxscndprjt/features/Order_page/Data/DataSource/razorpay_interface.dart';
 
 class OrderBtn extends StatefulWidget {
   final OrderSummaryPage widget;
@@ -52,8 +54,6 @@ class _OrderBtnState extends State<OrderBtn> {
             debugPrint('PaymentState: $paymentState');
             if (paymentState is PaymentSuccess) {
               if (_orderPlacedForCurrentPayment) return;
-              print("Address is : ${widget.address.toString()}");
-
               final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -75,10 +75,9 @@ class _OrderBtnState extends State<OrderBtn> {
                       imageUrl: cartItem.imageUrl,
                     );
                   }).toList();
-
               final order = OrderModel(
                 id: uuid.v4(),
-                userId: FirebaseAuth.instance.currentUser!.uid,
+                userId: user.uid,
                 items: orderItems,
                 totalAmount: widget.grandTotal.toInt(),
                 status: 'Pending',
@@ -173,7 +172,6 @@ class _OrderBtnState extends State<OrderBtn> {
                         return;
                       }
 
-                      // Trigger payment
                       final paymentRequest = PaymentModel(
                         amount: widget.widget.grandTotal,
                         name: "GlitchX",
@@ -181,11 +179,28 @@ class _OrderBtnState extends State<OrderBtn> {
                         email: user.email!,
                         orderItems: widget.widget.cartItems,
                       );
-
-                      context.read<PaymentBloc>().add(
-                        StartPaymentEvent(paymentRequest),
-                      );
+                      if (kIsWeb) {
+                        openRazorpayWebCheckout(
+                          name: paymentRequest.name,
+                          description: paymentRequest.description,
+                          email: paymentRequest.email,
+                          amount: paymentRequest.amount,
+                          onSuccess: () {
+                            context.read<PaymentBloc>().add(
+                              PaymentSuccessEvent(
+                                paymentId: 'web_dummy_payment_id',
+                                request: paymentRequest,
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        context.read<PaymentBloc>().add(
+                          StartPaymentEvent(paymentRequest),
+                        );
+                      }
                     },
+
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               padding: EdgeInsets.symmetric(
@@ -214,7 +229,7 @@ class _OrderBtnState extends State<OrderBtn> {
             label: Text(
               isLoading ? 'Processing...' : 'Order Now',
               style: TextStyle(
-                fontSize: widget.screenWidth * 0.045,
+                fontSize: widget.screenWidth * 0.020,
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),

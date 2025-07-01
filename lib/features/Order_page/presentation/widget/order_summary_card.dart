@@ -160,7 +160,7 @@ class _OrderSummaryCardState extends State<OrderSummaryCard> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Category: ${items.category ?? 'Unknown'}',
+                        'Category: ${items.category}',
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.white70,

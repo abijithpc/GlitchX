@@ -14,17 +14,6 @@ class Splashscreen2 extends StatefulWidget {
 
 class _Splashscreen2State extends State<Splashscreen2> {
   final controller = PageController();
-  bool lastPage = false; // Fixed variable name
-
-  @override
-  void initState() {
-    super.initState();
-    controller.addListener(() {
-      setState(() {
-        lastPage = (controller.page == 2);
-      });
-    });
-  }
 
   @override
   void dispose() {
@@ -34,59 +23,77 @@ class _Splashscreen2State extends State<Splashscreen2> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    final screen = MediaQuery.of(context).size;
+    final screenHeight = screen.height;
+    final screenWidth = screen.width;
 
     return BlocProvider(
       create: (context) => SplashBloc(),
       child: Scaffold(
         body: BlocBuilder<SplashBloc, SplashState>(
           builder: (context, state) {
-            return Container(
-              padding: EdgeInsets.only(bottom: 80),
-              child: PageView(
-                controller: controller,
-                onPageChanged: (index) {
-                  context.read<SplashBloc>().add(PageChanged(index));
-                },
-                children: [
-                  SplashContainer(
-                    heading: 'Hitman',
-                    description:
-                        "In Hitman: Blood Money (2006), if you played aggressively and left too much evidence (like bodies, camera footage, or witnesses), future levels would feature more security, tighter patrols, and guards who recognized Agent 47's face from newspaper reports.",
-                    backgroundImage:
-                        'Assets/SplashPhotos/hitman-phone-gs8ads5iebuthds5.jpg',
-                    screenWidth: screenWidth,
-                    screenHeight: screenHeight,
-                  ),
-                  SplashContainer(
-                    heading: 'Watch Dogs 2',
-                    description:
-                        "In the game, you can overhear NPCs talking about a new game called 'Space Driver', which is described as a violent open-world game full of crime and chaos—a clear reference to Grand Theft Auto.",
-                    backgroundImage:
-                        'Assets/SplashPhotos/wp5622162-watch-dogs-hd-phone-wallpapers.jpg',
-                    screenWidth: screenWidth,
-                    screenHeight: screenHeight,
-                  ),
-                  SplashContainer(
-                    heading: 'Grand Theft Auto 5',
-                    description:
-                        "The ocean in GTA 5 isn’t just for looks—it has a fully simulated underwater ecosystem, including AI-powered sharks that can actually hunt you down! If you go too deep without a submarine, you might become a shark’s next meal.",
-                    backgroundImage:
-                        'Assets/SplashPhotos/wp6706533-gta-v-android-wallpapers.jpg',
-                    screenWidth: screenWidth,
-                    screenHeight: screenHeight,
-                  ),
-                ],
-              ),
+            return PageView(
+              controller: controller,
+              onPageChanged: (index) {
+                context.read<SplashBloc>().add(PageChanged(index));
+              },
+              children: [
+                SplashContainer(
+                  heading: 'Hitman',
+                  description:
+                      "In Hitman: Blood Money (2006), if you played aggressively and left too much evidence...",
+                  backgroundImage:
+                      'Assets/SplashPhotos/hitman-phone-gs8ads5iebuthds5.jpg',
+                  landscapeImage:
+                      'Assets/image/hitman-adjusting-glove-2np2yvf7qu8vkoyx.jpg',
+                  screenWidth: screenWidth,
+                  screenHeight: screenHeight,
+                ),
+                SplashContainer(
+                  heading: 'Watch Dogs 2',
+                  description:
+                      "You can overhear NPCs talking about a new game called 'Space Driver'...",
+                  backgroundImage:
+                      'Assets/SplashPhotos/wp5622162-watch-dogs-hd-phone-wallpapers.jpg',
+                  landscapeImage:
+                      'Assets/image/watch-dogs-mlo7g7kp92rt4cpf.jpg',
+                  screenWidth: screenWidth,
+                  screenHeight: screenHeight,
+                ),
+                SplashContainer(
+                  heading: 'Grand Theft Auto 5',
+                  landscapeImage:
+                      'Assets/image/gta-5-landscape-collage-a0udfu5lk2jdqfb3.jpg',
+                  description:
+                      "The ocean in GTA 5 has a fully simulated underwater ecosystem...",
+                  backgroundImage:
+                      'Assets/SplashPhotos/wp6706533-gta-v-android-wallpapers.jpg',
+                  screenWidth: screenWidth,
+                  screenHeight: screenHeight,
+                ),
+              ],
             );
           },
         ),
         bottomSheet: BlocBuilder<SplashBloc, SplashState>(
           builder: (context, state) {
-            return state.pageIndex == 2
-                ? LoginSplashBtn(screenWidth: screenWidth)
-                : nxtskipbtn(controller: controller);
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.04,
+                vertical: screenHeight * 0.015,
+              ),
+              child:
+                  state.pageIndex == 2
+                      ? LoginSplashBtn(
+                        screenWidth: screenWidth,
+                        screenHeight: screenHeight,
+                      )
+                      : NxtSkipBtn(
+                        controller: controller,
+                        screenWidth: screenWidth,
+                        screenHeight: screenHeight,
+                      ),
+            );
           },
         ),
       ),

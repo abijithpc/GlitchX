@@ -57,7 +57,9 @@ class _GreetingCardState extends State<GreetingCard> {
     context.read<ProfileBloc>().add(LoadUserProfile());
     context.read<IgdbBloc>().add(LoadUpcomingTrailers());
 
-    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final uid = user.uid;
 
     _blockStream =
         FirebaseFirestore.instance.collection('users').doc(uid).snapshots();

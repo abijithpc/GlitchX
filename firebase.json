@@ -1,1 +1,40 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"glitchxapp00711","appId":"1:290026814616:android:35b453616056d9a81024ed","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"glitchxapp00711","configurations":{"android":"1:290026814616:android:35b453616056d9a81024ed","ios":"1:290026814616:ios:b1a4d21a3421fce91024ed","macos":"1:290026814616:ios:b1a4d21a3421fce91024ed","web":"1:290026814616:web:e3749f50417a2f4d1024ed","windows":"1:290026814616:web:57de1abf34bc38f81024ed"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "glitchxapp00711",
+          "appId": "1:290026814616:android:35b453616056d9a81024ed",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "glitchxapp00711",
+          "configurations": {
+            "android": "1:290026814616:android:35b453616056d9a81024ed",
+            "ios": "1:290026814616:ios:b1a4d21a3421fce91024ed",
+            "macos": "1:290026814616:ios:b1a4d21a3421fce91024ed",
+            "web": "1:290026814616:web:e3749f50417a2f4d1024ed",
+            "windows": "1:290026814616:web:57de1abf34bc38f81024ed"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "site": "glitchxx",
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

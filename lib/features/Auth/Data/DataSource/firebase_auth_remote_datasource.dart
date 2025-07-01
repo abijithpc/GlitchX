@@ -24,13 +24,15 @@ class FirebaseAuthRemoteDataSource {
       email: email,
       password: password,
     );
+    final user = credential.user;
+    if (user == null) throw Exception("User not created");
 
     // Send email verification after sign up
     await credential.user?.sendEmailVerification();
 
     // Create a Usermodel and store in Firestore with UID
     final newUser = Usermodels(
-      id: credential.user!.uid,
+      id: user.uid,
       username: username,
       email: email,
       mobileNumber: mobileNumber,
@@ -59,9 +61,10 @@ class FirebaseAuthRemoteDataSource {
         email: email,
         password: password,
       );
+      final user = credential.user;
+      if (user == null) throw Exception("Login failed: User not found");
 
-      final doc =
-          await _firestore.collection('users').doc(credential.user!.uid).get();
+      final doc = await _firestore.collection('users').doc(user.uid).get();
 
       if (!doc.exists) {
         throw Exception('User data does not exist in Firestore');

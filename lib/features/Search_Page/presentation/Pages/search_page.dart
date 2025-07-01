@@ -4,8 +4,6 @@ import 'package:glitchxscndprjt/Core/constant.dart';
 import 'package:glitchxscndprjt/Core/screenbackground.dart';
 import 'package:glitchxscndprjt/features/Category_Page/presentation/Bloc/product_bloc.dart';
 import 'package:glitchxscndprjt/features/Category_Page/presentation/Bloc/product_event.dart';
-import 'package:glitchxscndprjt/features/Category_Page/presentation/Bloc/product_state.dart';
-import 'package:glitchxscndprjt/features/Category_Page/presentation/Pages/product_details_page.dart';
 import 'package:glitchxscndprjt/features/Home_Page/presentation/Bloc/categories_state.dart';
 import 'package:glitchxscndprjt/features/Home_Page/presentation/Bloc/category_bloc.dart';
 import 'package:glitchxscndprjt/features/Home_Page/presentation/Bloc/category_event.dart';

@@ -1,4 +1,4 @@
-package com.example.glitchxscndprjt
+package com.glitchx.user
 
 import io.flutter.embedding.android.FlutterActivity
 

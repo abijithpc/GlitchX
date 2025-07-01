@@ -19,6 +19,12 @@ analyzer:
     prefer_const_constructors_in_immutables: ignore
     camel_case_types: ignore
     use_function_type_syntax_for_parameters: ignore
+    unnecessary_to_list_in_spreads: ignore
+    deprecated_member_use: ignore
+    unused_import: ignore
+    curly_braces_in_flow_control_structures: ignore
+    dangling_library_doc_comments: ignore
+    avoid_web_libraries_in_flutter: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

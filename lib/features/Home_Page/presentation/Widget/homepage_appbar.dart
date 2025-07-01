@@ -24,7 +24,9 @@ AppBar HomePage_AppBar(String locationText, BuildContext context) {
                 children: [
                   IconButton(
                     onPressed: () {
-                      final userId = FirebaseAuth.instance.currentUser!.uid;
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user == null) return;
+                      final userId = user.uid;
                       Navigator.of(context, rootNavigator: true).push(
                         MaterialPageRoute(
                           builder: (context) => WalletPage(userId: userId),

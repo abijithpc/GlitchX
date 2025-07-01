@@ -1,83 +1,89 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 class SplashContainer extends StatelessWidget {
+  final String heading;
+  final String description;
+  final String backgroundImage; // Portrait
+  final String? landscapeImage; // For web landscape
+  final double screenWidth;
+  final double screenHeight;
+
   const SplashContainer({
     super.key,
     required this.heading,
     required this.description,
     required this.backgroundImage,
+    this.landscapeImage,
     required this.screenWidth,
     required this.screenHeight,
   });
 
-  final double screenWidth;
-  final double screenHeight;
-  final String heading;
-  final String description;
-  final String backgroundImage;
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Background Image
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(backgroundImage),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
+    final isLandscapeWeb = kIsWeb && screenWidth > screenHeight;
+    final String imageToUse =
+        isLandscapeWeb && landscapeImage != null
+            ? landscapeImage!
+            : backgroundImage;
 
-        Positioned(
-          bottom: 0,
-          child: ClipPath(
-            child: Container(
-              width: screenWidth,
-              height: screenHeight * 0.35,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withAlpha(20),
-                    Colors.black.withAlpha(90),
-                  ],
-                ),
-                color: Colors.black.withAlpha(1),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(70),
-                  topRight: Radius.circular(70),
-                ),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    heading,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+    final double headingFont = screenWidth * (kIsWeb ? 0.05 : 0.08);
+    final double descriptionFont = screenWidth * (kIsWeb ? 0.025 : 0.035);
+    final double paddingHorizontal = screenWidth * 0.06;
+    final double paddingVertical = screenHeight * 0.08;
+
+    return Container(
+      width: screenWidth,
+      height: screenHeight,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(imageToUse),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: paddingHorizontal,
+          vertical: paddingVertical,
+        ),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black87, Colors.transparent],
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+          ),
+        ),
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: screenWidth > 800 ? 600 : double.infinity,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  heading,
+                  style: TextStyle(
+                    fontSize: headingFont,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  SizedBox(height: 15),
-                  Text(
-                    description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                ),
+                SizedBox(height: screenHeight * 0.015),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: descriptionFont,
+                    color: Colors.white70,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

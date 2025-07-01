@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glitchxscndprjt/features/Cart_Page/Domain/UseCase/clear_cart_usecase.dart';
 import 'package:glitchxscndprjt/features/Order_page/Domain/UseCase/cancelorder_usecase.dart';
@@ -45,8 +46,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderLoading());
       try {
         await cancelorderUsecase(event.orderId);
-        emit(OrderCancelledState());
-        emit(OrderCancelledState());
+        final userId = event.userId;
+        final updatedOrder = await getorder(userId);
+        emit(OrderPlaced(updatedOrder));
       } catch (e) {
         emit(OrderError(e.toString()));
       }
